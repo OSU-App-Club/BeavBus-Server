@@ -69,8 +69,8 @@ namespace CorvallisBus.Test
             {
                 new RouteArrivalsSummary(
                     RouteName: "TEST",
-                    ArrivalsSummary: "Over 30 minutes, then 1:25 PM",
-                    ScheduleSummary: "Hourly until 3:25 PM"
+                    ArrivalsSummary: "Over 30 minutes, then 1:25 pm",
+                    ScheduleSummary: "Hourly until 3:25 pm"
                 )
             };
 
@@ -160,13 +160,13 @@ namespace CorvallisBus.Test
             var expected = new List<RouteArrivalsSummary> {
                 new RouteArrivalsSummary(
                     RouteName: "TEST2",
-                    ArrivalsSummary: "25 minutes, then 1:25 PM",
-                    ScheduleSummary: "Hourly until 3:25 PM"
+                    ArrivalsSummary: "25 minutes, then 1:25 pm",
+                    ScheduleSummary: "Hourly until 3:25 pm"
                 ),
                 new RouteArrivalsSummary(
                     RouteName: "TEST1",
-                    ArrivalsSummary: "Over 30 minutes, then 1:24 PM",
-                    ScheduleSummary: "Hourly until 3:24 PM"
+                    ArrivalsSummary: "Over 30 minutes, then 1:24 pm",
+                    ScheduleSummary: "Hourly until 3:24 pm"
                 )
             };
 
@@ -234,7 +234,7 @@ namespace CorvallisBus.Test
             var expected = new List<RouteArrivalsSummary> {
                 new RouteArrivalsSummary(
                     RouteName: "TEST",
-                    ArrivalsSummary: "10:30 AM",
+                    ArrivalsSummary: "10:30 am",
                     ScheduleSummary: ""
                 )
             };
