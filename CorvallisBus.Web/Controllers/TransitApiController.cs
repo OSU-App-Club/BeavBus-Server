@@ -15,6 +15,7 @@ using System.IO;
 
 namespace CorvallisBus.Controllers
 {
+    [ApiController]
     [Route("api")]
     public class TransitApiController : Controller
     {
