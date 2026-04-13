@@ -125,28 +125,6 @@ namespace CorvallisBus.Controllers
         }
 
         /// <summary>
-        /// Endpoint for the Corvallis Bus iOS app's favorites extension.
-        /// </summary>
-        [HttpGet("favorites")]
-        public async Task<ActionResult> GetFavoritesViewModel(string location, string stops)
-        {
-            LatLong? userLocation;
-            List<int> parsedStopIds;
-
-            userLocation = ParseUserLocation(location);
-            parsedStopIds = ParseStopIds(stops);
-
-            if (userLocation == null && (parsedStopIds == null || parsedStopIds.Count == 0))
-            {
-                throw new ArgumentException($"One of {nameof(location)} or {nameof(stops)} must be non-empty.");
-            }
-
-            var viewModel = await TransitManager.GetFavoritesViewModel(_repository, _client, _getCurrentTime(), parsedStopIds, userLocation);
-            var viewModelJson = JsonConvert.SerializeObject(viewModel);
-            return Content(viewModelJson, "application/json");
-        }
-
-        /// <summary>
         /// Exposes the schedule that CTS routes adhere to for a set of stops.
         /// </summary>
         [HttpGet("schedule/{stopIds}")]

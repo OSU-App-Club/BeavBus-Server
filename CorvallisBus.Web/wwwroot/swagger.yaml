@@ -112,7 +112,7 @@ paths:
 
         Returns a JSON dictionary where the keys are Stop IDs and the values are dictionaries of `{ routeNo: schedule }`. The schedule is a list of pairs of a boolean "is an estimate" and integer "minutes from now." Integers are used because ETAs are interleaved with scheduled arrival times. This avoids a problem where an ETA appears to go up by a minute at the same time the minute on the system clock increments. It introduces a problem where the scheduled times vary by a minute if the server has a different minute value at the time it creates the payload than the client has at the time it consumes the payload.
 
-        For the time being, it's recommended to use the endpoints which interpret these times and produce user-friendly descriptions for you, such as `/favorites` and `/arrivals-summary`.
+        For the time being, it's recommended to use the endpoints which interpret these times and produce user-friendly descriptions for you, such as `/arrivals-summary`.
 
         Sample URL: https://corvallisb.us/api/schedule/14244,13265
       parameters:
@@ -157,71 +157,6 @@ paths:
           description: "A nested dictionary which groups the arrival times first by stop, then by route name."
           schema:
             $ref: "#/definitions/BusSchedule"
-  /favorites:
-    get:
-      operationId: getFavorites
-      description: |
-        Gets an array of stop data for "favorite stops" features. This allows a developer to easily create a widget to show the user's favorite stops. It shows arrivals summary information for the nearest 2 routes that will arrive at each favorite stop. If the user consents to provide a location, it will determine the stop's distance from the user and sort ascending by this quantity. The widget merely needs to wake up, download less than 1 KB of data, and display it.
-
-        Sample URL: https://corvallisb.us/api/favorites?stops=11776,10308&location=44.5645659,-123.2620435
-      parameters:
-        - name: stops
-          in: query
-          description: Stop IDs to get favorites data for
-          required: true
-          type: array
-          items:
-            type: number
-          collectionFormat: csv
-        - name: location
-          in: query
-          description: User location in lat,lng format
-          required: false
-          type: array
-          minItems: 2
-          maxItems: 2
-          items:
-            type: number
-          collectionFormat: csv
-      responses:
-        200:
-          examples:
-            application/json:
-              - stopName: Downtown Transit Center
-                stopID: 14237
-                distanceFromUser: 0.1 miles
-                isNearestStop: true
-                firstRouteColor: 034DA1
-                firstRouteName: '6'
-                firstRouteArrivals: '26 minutes, then 3:14 PM'
-                secondRouteColor: ''
-                secondRouteName: ''
-                secondRouteArrivals: ''
-              - stopName: NW Monroe Ave & NW 7th St
-                stopID: 10308
-                distanceFromUser: 0.2 miles
-                isNearestStop: false
-                firstRouteColor: F26521
-                firstRouteName: '3'
-                firstRouteArrivals: '2 minutes, then 3:08 PM'
-                secondRouteColor: D7181F
-                secondRouteName: '7'
-                secondRouteArrivals: '2 minutes, then 3:23 PM'
-              - stopName: SW Western Blvd & SW Hillside Dr
-                stopID: 11776
-                distanceFromUser: 1.7 miles
-                isNearestStop: false
-                firstRouteColor: F26521
-                firstRouteName: '3'
-                firstRouteArrivals: '2:57 PM, then 3:57 PM'
-                secondRouteColor: EC0C6D
-                secondRouteName: C3
-                secondRouteArrivals: '3:19 PM, then 5:34 PM'
-          description: The favorite stops data.
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/FavoriteStop"
   /arrivals-summary/{stopIds}:
     get:
       operationId: getArrivalsSummary
@@ -420,50 +355,6 @@ definitions:
     description: A dictionary with the stop ID as the key and the BusStopSchedule as the value.
     additionalProperties:
       $ref: "#/definitions/BusStopSchedule"
-  FavoriteStop:
-    type: object
-    required:
-      - stopId
-      - stopName
-      - distanceFromUser
-      - isNearestStop
-      - firstRouteColor
-      - firstRouteName
-      - firstRouteArrivals
-      - secondRouteColor
-      - secondRouteName
-      - secondRouteArrivals
-    properties:
-      stopId:
-        description: The ID of the stop.
-        type: string
-      stopName:
-        description: The name of the stop.
-        type: string
-      distanceFromUser:
-        description: The direct distance between the user location and this bus stop. If no location was provided, this is an empty string.
-        type: string
-      isNearestStop:
-        description: If true, indicates this stop was not present in the request parameter. Included because it's the closest bus stop to the user.
-        type: boolean
-      firstRouteColor:
-        description: The color of the first route in the summary.
-        type: string
-      firstRouteName:
-        description: The name of the first route in the summary.
-        type: string
-      firstRouteArrivals:
-        description: The arrivals summary for the first route.
-        type: string
-      secondRouteColor:
-        description: The color of the second route in the summary.
-        type: string
-      secondRouteName:
-        description: The name of the second route in the summary.
-        type: string
-      secondRouteArrivals:
-        description: The name of the second route in the summary.
-        type: string
   RouteArrivalsSummary:
     type: object
     description: A user-friendly summary of when this route will arrive at a particular stop.
