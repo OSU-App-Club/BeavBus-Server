@@ -86,7 +86,7 @@ public class RoutePatternProjectRouteDestination
 
 public class RoutePatternProjectRouteDestinationPattern
 {
-    public required string Mif { get; init; }
+    public required string Coordinates { get; init; }
 
     [XmlElement("Platform")]
     public required RoutePatternProjectRouteDestinationPatternPlatform[] Platform { get; init; }

@@ -21,9 +21,9 @@ namespace CorvallisBus.Core.Models.Connexionz
 
             IsActive = longestPattern.Schedule == "Active";
 
-            Polyline = EncodePolyline(GetPoints(longestPattern.Mif));
+            Polyline = EncodePolyline(GetPoints(longestPattern.Coordinates));
 
-            var points = GetPoints(longestPattern.Mif);
+            var points = GetPoints(longestPattern.Coordinates);
             // TODO: get the actual data fixed
             if (RouteNo == "4")
             {
