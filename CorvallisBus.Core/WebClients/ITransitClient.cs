@@ -12,6 +12,5 @@ namespace CorvallisBus.Core.WebClients
     {
         (BusSystemData data, List<string> errors) LoadTransitData();
         Task<ConnexionzPlatformET?> GetEta(int platformTag);
-        Task<List<ServiceAlert>> GetServiceAlerts();
     }
 }

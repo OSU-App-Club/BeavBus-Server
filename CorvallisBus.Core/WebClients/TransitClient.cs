@@ -221,7 +221,5 @@ namespace CorvallisBus.Core.WebClients
 
             return result;
         }
-
-        public Task<List<ServiceAlert>> GetServiceAlerts() => ServiceAlertsClient.GetServiceAlerts();
     }
 }

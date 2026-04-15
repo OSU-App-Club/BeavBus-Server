@@ -190,12 +190,6 @@ namespace CorvallisBus.Controllers
         }
 
         [HttpGet("service-alerts")]
-        public Task<List<ServiceAlert>> GetServiceAlerts()
-        {
-            return _client.GetServiceAlerts();
-        }
-
-        [HttpGet("service-alerts/html")]
         public ActionResult GetServiceAlertsWebsite()
         {
             return Redirect("https://www.corvallisoregon.gov/news?field_microsite_tid=581");

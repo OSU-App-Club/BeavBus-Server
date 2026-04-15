@@ -214,32 +214,6 @@ paths:
                 $ref: "#/definitions/RouteArrivalsSummary"
   /service-alerts:
     get:
-      operationId: getServiceAlerts
-      description: |
-        Gets service alerts from CTS which inform the user of holidays with no bus service, temporary route changes due to construction, etc.
-
-        Sample URL: https://corvallisb.us/api/service-alerts
-      responses:
-        200:
-          examples:
-            application/json:
-              - title: Holiday Service
-                publishDate: '2017-12-18T00:00:00-08:00'
-                link: 'https://www.corvallisoregon.gov/cts/page/holiday-service'
-              - title: Philomath Connection Offers Saturday Service
-                publishDate: '2017-12-12T00:00:00-08:00'
-                link: 'https://www.corvallisoregon.gov/cts/page/philomath-connection-offers-saturday-service'
-              - title: Upcoming Schedule for CTS and Night Owl
-                publishDate: '2017-11-29T00:00:00-08:00'
-                link: 'https://www.corvallisoregon.gov/cts/page/upcoming-schedule-cts-and-night-owl'
-
-          description: The service alerts.
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/ServiceAlert"
-  /service-alerts/html:
-    get:
       operationId: getServiceAlertsWebsite
       description: |
         Redirects to the official CTS service alerts page.
@@ -372,21 +346,3 @@ definitions:
       scheduleSummary:
         description: A summary of the rest of the day's arrivals.
         type: string
-  ServiceAlert:
-    type: object
-    description: A posting in the service alerts feed which may indicate interruptions or changes in service.
-    required:
-      - title
-      - publishDate
-      - link
-    properties:
-      title:
-        description: The title of the posting.
-        type: string
-      publishDate:
-        description: The date of publication.
-        type: string
-        format: date
-      link:
-        type: string
-        format: url
