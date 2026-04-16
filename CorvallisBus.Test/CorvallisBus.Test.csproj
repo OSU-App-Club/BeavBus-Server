@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="RoutePattern.xml" />
+    <EmbeddedResource Include="Resources/Alert.pb" />
   </ItemGroup>
 
   <ItemGroup>
