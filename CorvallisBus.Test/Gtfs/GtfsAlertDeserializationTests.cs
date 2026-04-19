@@ -111,6 +111,16 @@ namespace CorvallisBus.Test
 
             Assert.Equal("4/6-4/7 Routes 3, 8 & PC Detours", en_translated_header.Text);
             Assert.Equal("en", en_translated_header.Language);
+
+            // Description Text
+            var description_text = alert.DescriptionText;
+
+            Assert.Single(description_text.Translations);
+
+            var en_translated_description = description_text.Translations.First();
+
+            Assert.Equal("This is a test Alert Message", en_translated_description.Text);
+            Assert.Equal("en", en_translated_description.Language);
         }
     }
 }

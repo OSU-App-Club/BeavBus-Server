@@ -30,6 +30,7 @@ namespace CorvallisBus.Test
             Assert.Contains<string, string>("en", (IDictionary<string, string>)alert.Headers);
 
             Assert.Equal("4/6-4/7 Routes 3, 8 & PC Detours", alert.Headers["en"]);
+            Assert.Equal("This is a test Alert Message", alert.Descriptions["en"]);
         }
 
         [Fact]
@@ -109,6 +110,7 @@ namespace CorvallisBus.Test
             Assert.Single(alert.Description);
 
             Assert.Equal("4/6-4/7 Routes 3, 8 & PC Detours", alert.Title["en"]);
+            Assert.Equal("This is a test Alert Message", alert.Description["en"]);
         }
 
         [Fact]
