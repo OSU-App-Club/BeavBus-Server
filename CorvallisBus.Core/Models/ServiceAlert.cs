@@ -22,6 +22,9 @@ namespace CorvallisBus.Core.Models
         [property: JsonProperty("description")]
         Dictionary<string, string> Description)
     {
+        /// <summary>
+        /// Create a Service Alert from a GtfsServiceAlert
+        /// </summary>
         public static ServiceAlert Create(GtfsServiceAlert alert)
         {
             return new ServiceAlert(alert.Headers, alert.Descriptions);
@@ -44,6 +47,9 @@ namespace CorvallisBus.Core.Models
         [property: JsonProperty("description")]
         string Description)
     {
+        /// <summary>
+        /// Create a Localised Service Alert from a GtfsServiceAlert and a specified language
+        /// </summary>
         public static LocalisedServiceAlert Create(GtfsServiceAlert alert, string language_code)
         {
             if (!alert.Headers.TryGetValue(language_code, out string? title))
