@@ -28,6 +28,7 @@ namespace CorvallisBus.Controllers
         private readonly string _webRootPath;
         private readonly ITransitRepository _repository;
         private readonly ITransitClient _client;
+        private readonly TransitTimer _timer;
         private readonly Func<DateTimeOffset> _getCurrentTime;
 
         public TransitApiController(IWebHostEnvironment env)
@@ -35,6 +36,7 @@ namespace CorvallisBus.Controllers
             _webRootPath = env.WebRootPath;
             _repository = new MemoryTransitRepository(env.WebRootPath);
             _client = new TransitClient();
+            _timer = new TransitTimer(_repository, _client);
             _getCurrentTime = () => TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.Now, _destinationTimeZoneId);
         }
 
@@ -187,11 +189,45 @@ namespace CorvallisBus.Controllers
         /// </summary>
         /// <response code="302">Redirects to the service alerts page.</response>
         [HttpGet("service-alerts")]
-        [ProducesResponseType(302)]
+        [Produces("application/json")]
+        [ProducesResponseType<List<ServiceAlert>>(200)]
+        [ProducesResponseType(500)]
         [Tags(["CTS"])]
-        public ActionResult GetServiceAlertsWebsite()
+        public async Task<ActionResult> GetServiceAlerts()
         {
-            return Redirect("https://www.corvallisoregon.gov/news?field_microsite_tid=581");
+            try
+            {
+                var alerts = await TransitManager.GetServiceAlerts(_repository, _client, _getCurrentTime());
+                var alertsJson = JsonConvert.SerializeObject(alerts);
+                return Content(alertsJson, "application/json");
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
+
+        /// <summary>
+        /// Redirects to the official CTS service alerts page.
+        /// </summary>
+        /// <response code="302">Redirects to the service alerts page.</response>
+        [HttpGet("positions")]
+        [Produces("application/json")]
+        [ProducesResponseType<List<BusPosition>>(200)]
+        [ProducesResponseType(500)]
+        [Tags(["CTS"])]
+        public async Task<ActionResult> GetPositions()
+        {
+            try
+            {
+                var positions = await TransitManager.GetBusPositions(_repository, _client, _getCurrentTime());
+                var positionsJSON = JsonConvert.SerializeObject(positions);
+                return Content(positionsJSON, "application/json");
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
         }
 
         /// <summary>

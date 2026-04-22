@@ -1,5 +1,6 @@
 ﻿using CorvallisBus.Core.DataAccess;
 using CorvallisBus.Core.Models;
+using CorvallisBus.Core.Models.Gtfs;
 using CorvallisBus.Core.Models.Connexionz;
 using CorvallisBus.Core.WebClients;
 using Newtonsoft.Json;
@@ -177,6 +178,37 @@ namespace CorvallisBus
                           .ToList();
 
             return arrivalsSummaries;
+        }
+
+        /// <summary>
+        /// Returns the service alerts for any connected transit agencies.
+        /// </summary>
+        public static async Task<Dictionary<string, ServiceAlert>> GetServiceAlerts(ITransitRepository repository, ITransitClient client, DateTimeOffset currentTime)
+        {
+            var alerts = await repository.GetServiceAlertsAsync();
+
+            if (alerts is null)
+            {
+                alerts = await client.GetServiceAlerts();
+            }
+
+            var activeAlerts = alerts.ToDictionary(s => s.Id, (GtfsServiceAlert alert) => ServiceAlert.Create(alert));
+
+            return activeAlerts;
+        }
+
+        public static async Task<Dictionary<string, BusPosition>> GetBusPositions(ITransitRepository repository, ITransitClient client, DateTimeOffset currentTime)
+        {
+            var positions = await repository.GetVehiclePositionsAsync();
+
+            if (positions is null)
+            {
+                positions = await client.GetVehiclePositions();
+            }
+
+            var convertedPositions = positions.ToDictionary(s => s.Id, (GtfsVehiclePosition pos) => BusPosition.Create(pos));
+
+            return convertedPositions;
         }
     }
 }

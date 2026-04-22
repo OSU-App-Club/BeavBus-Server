@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CorvallisBus.Core.Models.Connexionz;
+using CorvallisBus.Core.Models.Gtfs;
 using CorvallisBus.Core.Models.GoogleTransit;
 using CorvallisBus.Core.DataAccess;
 using Newtonsoft.Json;
@@ -221,5 +222,12 @@ namespace CorvallisBus.Core.WebClients
 
             return result;
         }
+
+        /// <summary>
+        /// Get Service Alerts from GTFS
+        /// </summary>
+        public async Task<List<GtfsServiceAlert>> GetServiceAlerts() => await GtfsRealtimeClient.GetServiceAlerts();
+
+        public async Task<List<GtfsVehiclePosition>> GetVehiclePositions() => await GtfsRealtimeClient.GetVehiclePositions();
     }
 }

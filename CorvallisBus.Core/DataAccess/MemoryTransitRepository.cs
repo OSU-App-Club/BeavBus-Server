@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CorvallisBus.Core.Models;
+using CorvallisBus.Core.Models.Gtfs;
 using Newtonsoft.Json;
 using System.IO;
 
@@ -18,6 +19,8 @@ namespace CorvallisBus.Core.DataAccess
         private static ServerBusSchedule? s_schedule;
         private static string? s_serializedStaticData;
         private static BusStaticData? s_staticData;
+        private static List<GtfsServiceAlert>? s_serviceAlerts;
+        private static List<GtfsVehiclePosition>? s_vehiclePositions;
 
         private readonly string _platformTagsPath;
         private readonly string _schedulePath;
@@ -70,6 +73,19 @@ namespace CorvallisBus.Core.DataAccess
             return s_staticData;
         }
 
+        /// <summary>
+        /// Retrieve Service Alerts from Memory Repository
+        /// </summary>
+        public Task<List<GtfsServiceAlert>?> GetServiceAlertsAsync()
+        {
+            return Task.FromResult(s_serviceAlerts);
+        }
+
+        public Task<List<GtfsVehiclePosition>?> GetVehiclePositionsAsync()
+        {
+            return Task.FromResult(s_vehiclePositions);
+        }
+
         public void SetPlatformTags(Dictionary<int, int> platformTags)
         {
             s_platformTags = platformTags;
@@ -87,6 +103,20 @@ namespace CorvallisBus.Core.DataAccess
             s_staticData = staticData;
             s_serializedStaticData = JsonConvert.SerializeObject(staticData);
             File.WriteAllText(StaticDataPath, JsonConvert.SerializeObject(staticData));
+        }
+
+        /// <summary>
+        /// Save Service Alerts to Memory Repository
+        /// </summary>
+        // FIXME: where do we check duplicates?
+        public void SetServiceAlerts(List<GtfsServiceAlert>? serviceAlerts)
+        {
+            s_serviceAlerts = serviceAlerts;
+        }
+
+        public void SetVehiclePositions(List<GtfsVehiclePosition>? vehiclePositions)
+        {
+            s_vehiclePositions = vehiclePositions;
         }
     }
 }

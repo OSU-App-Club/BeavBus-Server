@@ -1,4 +1,5 @@
 ﻿using CorvallisBus.Core.Models;
+using CorvallisBus.Core.Models.Gtfs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,10 +27,24 @@ namespace CorvallisBus.Core.DataAccess
 
         Task<ServerBusSchedule> GetScheduleAsync();
 
+        /// <summary>
+        /// Retrieve Service Alerts from Repository
+        /// </summary>
+        Task<List<GtfsServiceAlert>?> GetServiceAlertsAsync();
+
+        Task<List<GtfsVehiclePosition>?> GetVehiclePositionsAsync();
+
         void SetStaticData(BusStaticData staticData);
 
         void SetSchedule(ServerBusSchedule schedule);
 
         void SetPlatformTags(Dictionary<int, int> platformTags);
+
+        /// <summary>
+        /// Save Service Alerts into Repository
+        /// </summary>
+        void SetServiceAlerts(List<GtfsServiceAlert>? serviceAlerts);
+
+        void SetVehiclePositions(List<GtfsVehiclePosition>? vehiclePositions);
     }
 }
