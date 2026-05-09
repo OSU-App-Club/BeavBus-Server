@@ -197,7 +197,7 @@ namespace CorvallisBus
             return activeAlerts;
         }
 
-        public static async Task<Dictionary<string, BusPosition>> GetBusPositions(ITransitRepository repository, ITransitClient client, DateTimeOffset currentTime)
+        public static async Task<List<BusPosition>> GetBusPositions(ITransitRepository repository, ITransitClient client, DateTimeOffset currentTime)
         {
             var positions = await repository.GetVehiclePositionsAsync();
 
@@ -206,7 +206,7 @@ namespace CorvallisBus
                 positions = await client.GetVehiclePositions();
             }
 
-            var convertedPositions = positions.ToDictionary(s => s.Id, (GtfsVehiclePosition pos) => BusPosition.Create(pos));
+            var convertedPositions = positions.Select(s => BusPosition.Create(s)).ToList();
 
             return convertedPositions;
         }
