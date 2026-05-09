@@ -1,52 +1,50 @@
 ﻿using CorvallisBus.Core;
 using CorvallisBus.Core.DataAccess;
 using CorvallisBus.Core.WebClients;
-using CorvallisBus.Core.Models;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.OpenApi;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
-using System.ComponentModel;
 
 namespace CorvallisBus.Web
 {
-    public class Startup
+    /// <summary>
+    /// Startup Class for Corvallis Bus Server
+    /// </summary>
+    public class Startup(IConfiguration configuration)
     {
+        /// <summary>
+        /// Swagger/OpenAPI Description. Shown in the API documentation
+        /// </summary>
         public const string AppDescription = @"
 The REST API that powers the BeavBus Corvallis Transit System data.
 
-Check it out on GitHub: https://github.com/OSU-App-Club/BeavBus-Server
+Check it out on GitHub: [https://github.com/OSU-App-Club/BeavBus-Server](https://github.com/OSU-App-Club/BeavBus-Server)
 
 ### Summary
 
 The Corvallis Bus REST API provides a convenient way to get real-time information about the free buses in Corvallis.
 Data from CTS is merged with data from Google Transit, with some convenient projections applied, and mapped into some easily-digestable JSON for different use cases.
 
-See the official BeavBus Client: https://github.com/OSU-App-Club/beavbus
+See the official BeavBus Client: [https://github.com/OSU-App-Club/beavbus](https://github.com/OSU-App-Club/beavbus)
 
 ### Disclaimer
 
 We assume no liability for any missed buses.
 Buses may be erratic in their arrival behavior, and we cannot control that.";
 
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        /// <summary>
+        /// Configuration Provider for App
+        /// </summary>
+        public IConfiguration Configuration { get; } = configuration;
 
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container.
+        /// </summary>
+        /// <param name="services">Service Collection for DI</param>
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddOpenApi(options =>
@@ -83,6 +81,12 @@ Buses may be erratic in their arrival behavior, and we cannot control that.";
 
             services.AddHostedService<Worker>();
         }
+
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// </summary>
+        /// <param name="app">Application Builder</param>
+        /// <param name="env">Application Environment Variables</param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");

@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
@@ -9,14 +8,15 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using CorvallisBus.Core.DataAccess;
 using CorvallisBus.Core.WebClients;
 using CorvallisBus.Core.Models;
-using Microsoft.AspNetCore.Hosting;
 using System.Runtime.InteropServices;
 using SendGrid;
 using SendGrid.Helpers.Mail;
-using System.IO;
 
 namespace CorvallisBus.Controllers
 {
+    /// <summary>
+    /// Transit API Controller
+    /// </summary>
     [ApiController]
     [Route("api")]
     public class TransitApiController : Controller
@@ -27,7 +27,10 @@ namespace CorvallisBus.Controllers
 
         private readonly Func<DateTimeOffset> _getCurrentTime;
 
-        public TransitApiController(IWebHostEnvironment env)
+        /// <summary>
+        /// Transit API Controller
+        /// </summary>
+        public TransitApiController()
         {
             _getCurrentTime = () => TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.Now, _destinationTimeZoneId);
         }
@@ -71,6 +74,8 @@ namespace CorvallisBus.Controllers
         /// For example, `"6": [1, 21]` means that Route 6 is arriving at the given stop in 1 minute, and again in 21 minutes. ETAs are limited to 30 minutes in the future by the city.
         /// </remarks>
         /// <param name="stopIds" type="array">Stop IDs to get ETAs for</param>
+        /// <param name="_repository" type="ITransitRepository">Transit Repository</param>
+        /// <param name="_client" type="ITransitClient">Transit Client</param>
         /// <response code="200">The stop ETAs.</response>
         /// <response code="400">An error occured validating the Stop IDs</response>
         [HttpGet("eta")]
@@ -113,6 +118,8 @@ namespace CorvallisBus.Controllers
         /// For the time being, it's recommended to use the endpoints which interpret these times and produce user-friendly descriptions for you, such as `/arrivals-summary`.
         /// </remarks>
         /// <param name="stopIds" type="array">Stop IDs to get schedules for</param>
+        /// <param name="_repository" type="ITransitRepository">Transit Repository</param>
+        /// <param name="_client" type="ITransitClient">Transit Client</param>
         /// <response code="200">A nested dictionary which groups the arrival times first by stop, then by route name.</response>
         /// <response code="400">An error occured validating the Stop IDs</response>
         [HttpGet("schedule")]
@@ -149,6 +156,8 @@ namespace CorvallisBus.Controllers
         /// The server tries to determine if each route arrives at a given stop "pretty much" hourly or half-hourly. Most routes arrive hourly, with a 10-minute break in the middle of the day. Thus if all the scheduled times left in the day are between 50-70 minutes from each other, it's considered to be an hourly schedule. Similarly with all being 20-40 minutes apart to be considered half-hourly.
         /// </remarks>
         /// <param name="stopIds" type="array">Stop IDs to get arrivals summary for</param>
+        /// <param name="_repository" type="ITransitRepository">Transit Repository</param>
+        /// <param name="_client" type="ITransitClient">Transit Client</param>
         /// <response code="200">A dictionary with the stop IDs as the key and the summaries array as the value.</response>
         /// <response code="400">An error occured validating the Stop IDs</response>
         [HttpGet("arrivals-summary")]
