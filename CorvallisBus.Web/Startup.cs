@@ -1,4 +1,9 @@
-﻿using System;
+﻿using CorvallisBus.Core;
+using CorvallisBus.Core.DataAccess;
+using CorvallisBus.Core.WebClients;
+using CorvallisBus.Core.Models;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Globalization;
@@ -11,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
+using System.ComponentModel;
 
 namespace CorvallisBus.Web
 {
@@ -43,7 +49,8 @@ Buses may be erratic in their arrival behavior, and we cannot control that.";
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddOpenApi(options => {
+            services.AddOpenApi(options =>
+            {
                 options.AddDocumentTransformer((document, context, cancellationToken) =>
                 {
                     document.Info.Title = "BeavBusTransitClient";
@@ -55,7 +62,7 @@ Buses may be erratic in their arrival behavior, and we cannot control that.";
                         Name = "MIT",
                         Identifier = "MIT",
                     };
-    
+
                     document.Info.Contact = new OpenApiContact
                     {
                         Name = "OSU App Club",
@@ -65,6 +72,17 @@ Buses may be erratic in their arrival behavior, and we cannot control that.";
                 });
             });
             services.AddMvc(option => option.EnableEndpointRouting = false);
+
+            services.AddSingleton<ITransitRepository>(provider => new MemoryTransitRepository(provider.GetService<IWebHostEnvironment>().WebRootPath));
+            services.AddSingleton<ITransitClient>(provider => new TransitClient());
+
+            services.AddHostedService<Worker>(serviceProvider =>
+                new Worker(
+                    serviceProvider.GetService<ILogger<Worker>>(),
+                    serviceProvider.GetService<ITransitRepository>(),
+                    serviceProvider.GetService<ITransitClient>()
+                )
+            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
