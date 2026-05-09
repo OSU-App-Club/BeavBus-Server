@@ -73,19 +73,16 @@ Buses may be erratic in their arrival behavior, and we cannot control that.";
             });
             services.AddMvc(option => option.EnableEndpointRouting = false);
 
-            services.AddSingleton<ITransitRepository>(provider => new MemoryTransitRepository(provider.GetService<IWebHostEnvironment>().WebRootPath));
-            services.AddSingleton<ITransitClient>(provider => new TransitClient());
+            // FIXME: This should not require GetService like this
+            services.AddSingleton<ITransitRepository>(provider => {
+                IWebHostEnvironment? env = provider.GetService<IWebHostEnvironment>();
+                string Path = env != null ? env.WebRootPath : "";
+                return new MemoryTransitRepository(Path);
+            });
+            services.AddSingleton<ITransitClient, TransitClient>();
 
-            services.AddHostedService<Worker>(serviceProvider =>
-                new Worker(
-                    serviceProvider.GetService<ILogger<Worker>>(),
-                    serviceProvider.GetService<ITransitRepository>(),
-                    serviceProvider.GetService<ITransitClient>()
-                )
-            );
+            services.AddHostedService<Worker>();
         }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
