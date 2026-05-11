@@ -1,23 +1,28 @@
 
 using CorvallisBus.Core.GtfsRealtimeGenerated;
-using CorvallisBus.Core.Models;
 using ProtoBuf;
 using System;
 using System.Linq;
 using System.IO;
 using System.Reflection;
-using System.Resources;
 using Xunit;
 
 namespace CorvallisBus.Test
 {
-    public class GtfsDeserializationTests
+    public class Gtfs_ServiceAlert_Deserialization_Tests
     {
-        [Fact]
-        public void AlertDeserializationHeader()
+        private FeedMessage LoadServiceAlert()
         {
-            var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("CorvallisBus.Test.Resources.Alert.pb") ?? throw new Exception();
-            var feed = Serializer.Deserialize<FeedMessage>(resource);
+            Stream? resource = Assembly.GetExecutingAssembly().GetManifestResourceStream(Utilities.SERVICE_ALERT_PROTOBUF_FILE) ?? throw new Exception();
+            FeedMessage? feed = Serializer.Deserialize<FeedMessage>(resource);
+            
+            return feed;
+        }
+
+        [Fact]
+        public void Gtfs_ServiceAlert_Deserialization_Header()
+        {
+            FeedMessage feed = LoadServiceAlert();
 
             var header = feed.Header;
 
@@ -30,10 +35,9 @@ namespace CorvallisBus.Test
         }
 
         [Fact]
-        public void AlertDeserializationMessage()
+        public void Gtfs_ServiceAlert_Deserialization_Message()
         {
-            var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("CorvallisBus.Test.Resources.Alert.pb") ?? throw new Exception();
-            var feed = Serializer.Deserialize<FeedMessage>(resource);
+            FeedMessage feed = LoadServiceAlert();
 
             var entities = feed.Entities;
 
@@ -50,10 +54,9 @@ namespace CorvallisBus.Test
         }
 
         [Fact]
-        public void AlertDeserializationAlertDetails()
+        public void Gtfs_ServiceAlert_Deserialization_AlertDetails()
         {
-            var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("CorvallisBus.Test.Resources.Alert.pb") ?? throw new Exception();
-            var feed = Serializer.Deserialize<FeedMessage>(resource);
+            FeedMessage feed = LoadServiceAlert();
 
             var alert = feed.Entities.First().Alert;
 
@@ -74,10 +77,9 @@ namespace CorvallisBus.Test
         }
 
         [Fact]
-        public void AlertDeserializationInformedEntities()
+        public void Gtfs_ServiceAlert_Deserialization_InformedEntities()
         {
-            var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("CorvallisBus.Test.Resources.Alert.pb") ?? throw new Exception();
-            var feed = Serializer.Deserialize<FeedMessage>(resource);
+            FeedMessage feed = LoadServiceAlert();
 
             var alert = feed.Entities.First().Alert;
 
@@ -95,10 +97,9 @@ namespace CorvallisBus.Test
         }
 
         [Fact]
-        public void AlertDeserializationTranslatedText()
+        public void Gtfs_ServiceAlert_Deserialization_TranslatedText()
         {
-            var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("CorvallisBus.Test.Resources.Alert.pb") ?? throw new Exception();
-            var feed = Serializer.Deserialize<FeedMessage>(resource);
+            FeedMessage feed = LoadServiceAlert();
 
             var alert = feed.Entities.First().Alert;
 
