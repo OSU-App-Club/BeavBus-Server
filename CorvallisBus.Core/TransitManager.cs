@@ -189,12 +189,12 @@ namespace CorvallisBus
 
             if (alerts is null)
             {
-                alerts = await client.GetServiceAlerts();
+                alerts = await client.GetServiceAlerts(DateTimeOffset.MinValue);
             }
 
-            var activeAlerts = alerts.ToDictionary(s => s.Id, (GtfsServiceAlert alert) => ServiceAlert.Create(alert));
+            var activeAlerts = alerts?.ToDictionary(s => s.Id, (GtfsServiceAlert alert) => ServiceAlert.Create(alert));
 
-            return activeAlerts;
+            return activeAlerts ?? new Dictionary<string, ServiceAlert> { };
         }
 
         public static async Task<List<BusPosition>> GetBusPositions(ITransitRepository repository, ITransitClient client, DateTimeOffset currentTime)
@@ -203,12 +203,12 @@ namespace CorvallisBus
 
             if (positions is null)
             {
-                positions = await client.GetVehiclePositions();
+                positions = await client.GetVehiclePositions(DateTimeOffset.MinValue);
             }
 
-            var convertedPositions = positions.Select(s => BusPosition.Create(s)).ToList();
+            var convertedPositions = positions?.Select(s => BusPosition.Create(s)).ToList();
 
-            return convertedPositions;
+            return convertedPositions ?? new List<BusPosition> { };
         }
     }
 }

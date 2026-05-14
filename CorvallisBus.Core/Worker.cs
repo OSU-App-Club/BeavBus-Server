@@ -62,11 +62,13 @@ namespace CorvallisBus.Core
             _logger.LogInformation("Worker executing tasks at: {time}", DateTimeOffset.Now);
 
             // Service Alerts
-            var alerts = await _client.GetServiceAlerts();
+
+            // FIXME: get timestamp from repository. but i don' tknow how I want that API yet.
+            var alerts = await _client.GetServiceAlerts(DateTimeOffset.MinValue);
             _repository.SetServiceAlerts(alerts);
 
             // Vehicle Positions
-            var positions = await _client.GetVehiclePositions();
+            var positions = await _client.GetVehiclePositions(DateTimeOffset.MinValue);
             _repository.SetVehiclePositions(positions);
         }
     }

@@ -28,14 +28,13 @@ namespace CorvallisBus.Core.Models.Gtfs
         /// <summary>
         /// Create a Service Alert from a GTFS Feed Entity
         /// </summary>
-        public static GtfsVehiclePosition Create(FeedHeader header, FeedEntity entity)
+        public static GtfsVehiclePosition Create(FeedEntity entity, ulong timestamp)
         {
             var id = entity.Id;
-            var timestamp = header.Timestamp;
 
             var stop_seq = entity.Vehicle.CurrentStopSequence;
             var stop_status = entity.Vehicle.CurrentStatus;
-                
+
             var trip = GtfsVehicleTrip.Create(entity);
             var position = GtfsVehiclePositionDetails.Create(entity);
             var vehicle = GtfsVehicleDescriptor.Create(entity);

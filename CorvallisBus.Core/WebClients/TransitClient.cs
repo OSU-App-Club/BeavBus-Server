@@ -226,8 +226,11 @@ namespace CorvallisBus.Core.WebClients
         /// <summary>
         /// Get Service Alerts from GTFS
         /// </summary>
-        public async Task<List<GtfsServiceAlert>> GetServiceAlerts() => await GtfsRealtimeClient.GetServiceAlerts();
+        public async Task<List<GtfsServiceAlert>?> GetServiceAlerts(DateTimeOffset lastSavedTimestamp) => await GtfsRealtimeClient.GetServiceAlerts(lastSavedTimestamp);
 
-        public async Task<List<GtfsVehiclePosition>> GetVehiclePositions() => await GtfsRealtimeClient.GetVehiclePositions();
+        /// <summary>
+        /// Get Vehicle Positions from GTFS
+        /// </summary>
+        public async Task<List<GtfsVehiclePosition>?> GetVehiclePositions(DateTimeOffset lastSavedTimestamp) => await GtfsRealtimeClient.GetVehiclePositions(lastSavedTimestamp);
     }
 }

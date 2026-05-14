@@ -17,8 +17,8 @@ namespace CorvallisBus.Core.WebClients
         /// <summary>
         /// Get Service Alerts from GTFS
         /// </summary>
-        Task<List<GtfsServiceAlert>> GetServiceAlerts();
+        Task<List<GtfsServiceAlert>?> GetServiceAlerts(DateTimeOffset lastSavedTimestamp);
 
-        Task<List<GtfsVehiclePosition>> GetVehiclePositions();
+        Task<List<GtfsVehiclePosition>?> GetVehiclePositions(DateTimeOffset lastSavedTimestamp);
     }
 }

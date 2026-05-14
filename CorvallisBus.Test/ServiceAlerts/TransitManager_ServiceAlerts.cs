@@ -226,7 +226,7 @@ namespace CorvallisBus.Test
             // Mocks
             var mockClient = new Mock<ITransitClient>();
             var mockRepo = new Mock<ITransitRepository>();
-            mockClient.Setup(client => client.GetServiceAlerts()).Returns(Task.FromResult(new List<GtfsServiceAlert> { alert }));
+            mockClient.Setup(client => client.GetServiceAlerts(DateTimeOffset.MinValue)).Returns(Task.FromResult<List<GtfsServiceAlert>?>(new List<GtfsServiceAlert> { alert }));
             mockRepo.Setup(repo => repo.GetServiceAlertsAsync()).Returns(Task.FromResult<List<GtfsServiceAlert>?>(null));
 
 
