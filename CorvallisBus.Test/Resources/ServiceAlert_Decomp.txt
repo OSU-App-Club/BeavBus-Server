@@ -23,3 +23,51 @@ entity {
     }
   }
 }
+entity {
+  id: "2"
+  alert {
+    informed_entity {
+      agency_id: "1"
+    }
+    header_text {
+      translation {
+        text: "Invalid Header"
+        language: "en"
+      }
+      translation {
+        text: "Second Invalid Header"
+        language: "en"
+      }
+    }
+    description_text {
+      translation {
+        text: "Valid Desc"
+        language: "en"
+      }
+    }
+  }
+}
+entity {
+  id: "3"
+  alert {
+    informed_entity {
+      agency_id: "1"
+    }
+    header_text {
+      translation {
+        text: "Valid Header"
+        language: "en"
+      }
+    }
+    description_text {
+      translation {
+        text: "Invalid Desc"
+        language: "en"
+      }
+      translation {
+        text: "Second Invalid Desc"
+        language: "en"
+      }
+    }
+  }
+}

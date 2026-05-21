@@ -35,18 +35,21 @@ namespace CorvallisBus.Test
             Assert.Equal((ulong) 1776316800, header.Timestamp);
         }
 
-        [Fact]
-        public void Gtfs_ServiceAlert_Deserialization_Message()
+        [Theory]
+        [InlineData(0, "1")]
+        [InlineData(1, "2")]
+        [InlineData(2, "3")]
+        public void Gtfs_ServiceAlert_Deserialization_Message(int AlertIndex, string AlertId)
         {
             FeedMessage feed = LoadServiceAlert();
 
             var entities = feed.Entities;
 
-            Assert.Single(entities);
+            Assert.Equal(3, entities.Count);
 
-            var message = entities.First();
+            var message = entities[AlertIndex];
 
-            Assert.Equal("1", message.Id);
+            Assert.Equal(AlertId, message.Id);
             Assert.False(message.IsDeleted);
 
             Assert.Null(message.Vehicle);
@@ -54,12 +57,15 @@ namespace CorvallisBus.Test
             Assert.NotNull(message.Alert);
         }
 
-        [Fact]
-        public void Gtfs_ServiceAlert_Deserialization_AlertDetails()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(2)]
+        public void Gtfs_ServiceAlert_Deserialization_AlertDetails(int AlertIndex)
         {
             FeedMessage feed = LoadServiceAlert();
 
-            var alert = feed.Entities.First().Alert;
+            var alert = feed.Entities[AlertIndex].Alert;
 
             Assert.Empty(alert.ActivePeriods);
             Assert.Single(alert.InformedEntities);
@@ -75,12 +81,15 @@ namespace CorvallisBus.Test
             Assert.Equal(Alert.SeverityLevel.UnknownSeverity, alert.severity_level);
         }
 
-        [Fact]
-        public void Gtfs_ServiceAlert_Deserialization_InformedEntities()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(2)]
+        public void Gtfs_ServiceAlert_Deserialization_InformedEntities(int AlertIndex)
         {
             FeedMessage feed = LoadServiceAlert();
 
-            var alert = feed.Entities.First().Alert;
+            var alert = feed.Entities[AlertIndex].Alert;
 
             var informed = alert.InformedEntities.First();
 
@@ -120,6 +129,72 @@ namespace CorvallisBus.Test
 
             Assert.Equal("This is a test Alert Message", en_translated_description.Text);
             Assert.Equal("en", en_translated_description.Language);
+        }
+
+        [Fact]
+        public void Gtfs_ServiceAlert_Deserialization_TranslatedText_DuplicatedHeader()
+        {
+            FeedMessage feed = LoadServiceAlert();
+
+            var alert = feed.Entities[1].Alert;
+
+            // Header Text
+            var header_text = alert.HeaderText;
+
+            Assert.Equal(2, header_text.Translations.Count);
+
+            var en_translated_header = header_text.Translations.First();
+
+            Assert.Equal("Invalid Header", en_translated_header.Text);
+            Assert.Equal("en", en_translated_header.Language);
+
+            var second_en_translated_header = header_text.Translations.Last();
+
+            Assert.Equal("Second Invalid Header", second_en_translated_header.Text);
+            Assert.Equal("en", second_en_translated_header.Language);
+
+            // Description Text
+            var description_text = alert.DescriptionText;
+
+            Assert.Single(description_text.Translations);
+
+            var en_translated_description = description_text.Translations.First();
+
+            Assert.Equal("Valid Desc", en_translated_description.Text);
+            Assert.Equal("en", en_translated_description.Language);
+        }
+
+        [Fact]
+        public void Gtfs_ServiceAlert_Deserialization_TranslatedText_DuplicatedDescription()
+        {
+            FeedMessage feed = LoadServiceAlert();
+
+            var alert = feed.Entities[2].Alert;
+
+            // Header Text
+            var header_text = alert.HeaderText;
+
+            Assert.Single(header_text.Translations);
+
+            var en_translated_header = header_text.Translations.First();
+
+            Assert.Equal("Valid Header", en_translated_header.Text);
+            Assert.Equal("en", en_translated_header.Language);
+
+            // Description Text
+            var description_text = alert.DescriptionText;
+
+            Assert.Equal(2, description_text.Translations.Count);
+
+            var en_translated_description = description_text.Translations.First();
+
+            Assert.Equal("Invalid Desc", en_translated_description.Text);
+            Assert.Equal("en", en_translated_description.Language);
+
+            var second_en_translated_description = description_text.Translations.Last();
+
+            Assert.Equal("Second Invalid Desc", second_en_translated_description.Text);
+            Assert.Equal("en", second_en_translated_description.Language);
         }
     }
 }
