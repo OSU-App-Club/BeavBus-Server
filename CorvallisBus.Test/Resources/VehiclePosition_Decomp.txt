@@ -1,0 +1,45 @@
+header {
+  gtfs_realtime_version: "2.0"
+  incrementality: FULL_DATASET
+  timestamp: 1776316800
+}
+entity {
+  id: "1"
+  vehicle {
+    trip {
+      trip_id: "277"
+    }
+    position {
+      latitude: 44.5647659
+      longitude: -123.263306
+      speed: 0
+    }
+    current_stop_sequence: 1
+    current_status: STOPPED_AT
+    timestamp: 1779327322
+    vehicle {
+      id: "1"
+      label: "749"
+    }
+  }
+}
+entity {
+  id: "4"
+  vehicle {
+    trip {
+      trip_id: "640"
+    }
+    position {
+      latitude: 44.5646858
+      longitude: -123.263367
+      speed: 7
+    }
+    current_stop_sequence: 11
+    current_status: IN_TRANSIT_TO
+    timestamp: 1779327301
+    vehicle {
+      id: "4"
+      label: "761"
+    }
+  }
+}

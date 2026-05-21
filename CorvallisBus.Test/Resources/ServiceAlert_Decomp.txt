@@ -1,0 +1,25 @@
+header {
+  gtfs_realtime_version: "2.0"
+  incrementality: FULL_DATASET
+  timestamp: 1776316800
+}
+entity {
+  id: "1"
+  alert {
+    informed_entity {
+      agency_id: "1"
+    }
+    header_text {
+      translation {
+        text: "4/6-4/7 Routes 3, 8 & PC Detours"
+        language: "en"
+      }
+    }
+    description_text {
+      translation {
+        text: "This is a test Alert Message"
+        language: "en"
+      }
+    }
+  }
+}

@@ -8,6 +8,9 @@
 
   <ItemGroup>
     <EmbeddedResource Include="RoutePattern.xml" />
+    <EmbeddedResource Include="Resources/ServiceAlert.pb" />
+    <EmbeddedResource Include="Resources/VehiclePosition.pb" />
+    <EmbeddedResource Include="Resources/TripUpdate.pb" />
   </ItemGroup>
 
   <ItemGroup>

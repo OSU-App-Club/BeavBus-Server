@@ -1,0 +1,97 @@
+header {
+  gtfs_realtime_version: "2.0"
+  incrementality: FULL_DATASET
+  timestamp: 1776316800
+}
+entity {
+  id: "277"
+  trip_update {
+    trip {
+      trip_id: "277"
+    }
+    stop_time_update {
+      stop_sequence: 1
+      arrival {
+        time: 1779326969
+      }
+      departure {
+        time: 1779327900
+      }
+      stop_id: "419"
+    }
+    vehicle {
+      id: "1"
+      label: "749"
+    }
+  }
+}
+entity {
+  id: "278"
+  trip_update {
+    trip {
+      trip_id: "278"
+    }
+    stop_time_update {
+      stop_sequence: 1
+      arrival {
+        time: 1779329644
+      }
+      departure {
+        time: 1779329700
+      }
+      stop_id: "419"
+    }
+    vehicle {
+      id: "1"
+      label: "749"
+    }
+  }
+}
+entity {
+  id: "298"
+  trip_update {
+    trip {
+      trip_id: "298"
+    }
+    stop_time_update {
+      stop_sequence: 1
+      arrival {
+        time: 1779326969
+      }
+      departure {
+        time: 1779327000
+      }
+      stop_id: "359"
+    }
+    vehicle {
+      id: "16"
+      label: "762"
+    }
+  }
+}
+entity {
+  id: "354"
+  trip_update {
+    trip {
+      trip_id: "354"
+    }
+    stop_time_update {
+      stop_sequence: 29
+      departure {
+        time: 1779326928
+      }
+      stop_id: "163"
+    }
+    stop_time_update {
+      stop_sequence: 30
+      arrival {
+        time: 1779326974
+      }
+      stop_id: "164"
+    }
+    vehicle {
+      id: "14"
+      label: "757"
+    }
+  }
+}
