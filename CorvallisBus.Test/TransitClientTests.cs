@@ -29,7 +29,7 @@ namespace CorvallisBus.Test
         [IntegrationTest]
         public void ValidateInitJob()
         {
-            var client = new TransitClient();
+            var client = new TransitClient(new System.Net.Http.HttpClient());
             var (_, errors) = client.LoadTransitData();
             foreach (var error in errors)
             {

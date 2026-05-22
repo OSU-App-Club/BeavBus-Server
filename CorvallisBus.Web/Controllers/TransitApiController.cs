@@ -30,11 +30,11 @@ namespace CorvallisBus.Controllers
         private readonly ITransitClient _client;
         private readonly Func<DateTimeOffset> _getCurrentTime;
 
-        public TransitApiController(IWebHostEnvironment env)
+        public TransitApiController(IWebHostEnvironment env, TransitClient client)
         {
             _webRootPath = env.WebRootPath;
             _repository = new MemoryTransitRepository(env.WebRootPath);
-            _client = new TransitClient();
+            _client = client;
             _getCurrentTime = () => TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.Now, _destinationTimeZoneId);
         }
 

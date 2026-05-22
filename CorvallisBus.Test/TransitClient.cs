@@ -25,7 +25,7 @@ namespace CorvallisBus.Test
         }
     };
 
-    public class Gtfs_RealtimeClient_Tests
+    public class TransitClient_Tests
     {
         /// <summary>
         /// The filename for the embedded ServiceAlert Protobuf Test File
@@ -45,7 +45,7 @@ namespace CorvallisBus.Test
                 Content = new StreamContent(LoadServiceAlert())
             };
             GtfsRealtimeMessageHandler? mockHttp = new GtfsRealtimeMessageHandler(res);
-            GtfsRealtimeClient underTest = new GtfsRealtimeClient(new HttpClient(mockHttp));
+            TransitClient underTest = new TransitClient(new HttpClient(mockHttp));
 
             List<ServiceAlert>? alerts = await underTest.GetServiceAlerts(null);
 
@@ -66,7 +66,7 @@ namespace CorvallisBus.Test
                 Content = new StreamContent(LoadServiceAlert())
             };
             GtfsRealtimeMessageHandler? mockHttp = new GtfsRealtimeMessageHandler(res);
-            GtfsRealtimeClient underTest = new GtfsRealtimeClient(new HttpClient(mockHttp));
+            TransitClient underTest = new TransitClient(new HttpClient(mockHttp));
 
             List<ServiceAlert>? alerts = await underTest.GetServiceAlerts(DateTimeOffset.FromUnixTimeSeconds(1776316799));
 
@@ -81,7 +81,7 @@ namespace CorvallisBus.Test
                 Content = new StreamContent(LoadServiceAlert())
             };
             GtfsRealtimeMessageHandler? mockHttp = new GtfsRealtimeMessageHandler(res);
-            GtfsRealtimeClient underTest = new GtfsRealtimeClient(new HttpClient(mockHttp));
+            TransitClient underTest = new TransitClient(new HttpClient(mockHttp));
 
             List<ServiceAlert>? alerts = await underTest.GetServiceAlerts(DateTimeOffset.FromUnixTimeSeconds(1776316800));
 
@@ -96,7 +96,7 @@ namespace CorvallisBus.Test
                 Content = new StreamContent(LoadServiceAlert())
             };
             GtfsRealtimeMessageHandler? mockHttp = new GtfsRealtimeMessageHandler(res);
-            GtfsRealtimeClient underTest = new GtfsRealtimeClient(new HttpClient(mockHttp));
+            TransitClient underTest = new TransitClient(new HttpClient(mockHttp));
 
             List<ServiceAlert>? alerts = await underTest.GetServiceAlerts(DateTimeOffset.FromUnixTimeSeconds(1776316801));
 

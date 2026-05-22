@@ -2,8 +2,6 @@
 using CorvallisBus.Core.Models.Connexionz;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CorvallisBus.Core.WebClients
@@ -12,5 +10,11 @@ namespace CorvallisBus.Core.WebClients
     {
         (BusSystemData data, List<string> errors) LoadTransitData();
         Task<ConnexionzPlatformET?> GetEta(int platformTag);
+
+        /// <summary>
+        /// Fetch the latest service alerts
+        /// </summary>
+        /// <returns>A List of service alerts</returns>
+        Task<List<ServiceAlert>?> GetServiceAlerts(DateTimeOffset? lastSavedTimestamp);
     }
 }

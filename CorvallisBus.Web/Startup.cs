@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
+using CorvallisBus.Core.WebClients;
 
 namespace CorvallisBus.Web
 {
@@ -65,6 +66,8 @@ Buses may be erratic in their arrival behavior, and we cannot control that.";
                 });
             });
             services.AddMvc(option => option.EnableEndpointRouting = false);
+
+            services.AddHttpClient<TransitClient>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

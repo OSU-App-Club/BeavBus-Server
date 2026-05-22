@@ -17,8 +17,11 @@ namespace CorvallisBus.Core.WebClients
     /// Merges data obtained from Connexionz and Google Transit
     /// and makes it ready for delivery to clients.
     /// </summary>
-    public class TransitClient : ITransitClient
+    public class TransitClient(HttpClient client) : ITransitClient
     {
+        private readonly HttpClient _client = client;
+        private GtfsRealtimeClient gtfsRealtimeClient => new GtfsRealtimeClient(_client);
+
         public (BusSystemData data, List<string> errors) LoadTransitData()
         {
             var connexionzPlatforms = ConnexionzClient.LoadPlatforms();
@@ -221,5 +224,11 @@ namespace CorvallisBus.Core.WebClients
 
             return result;
         }
+
+        /// <summary>
+        /// Fetch the latest service alerts
+        /// </summary>
+        /// <returns>A List of service alerts</returns>
+        public async Task<List<ServiceAlert>?> GetServiceAlerts(DateTimeOffset? lastSavedTimestamp) => await gtfsRealtimeClient.GetServiceAlerts(lastSavedTimestamp);
     }
 }
