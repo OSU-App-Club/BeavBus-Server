@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 
 namespace CorvallisBus.Core.WebClients
 {
-    public class GoogleTransitData
+    internal class GoogleTransitData
     {
         public List<GoogleRoute> Routes { get; }
         public List<GoogleRouteSchedule> Schedules { get; }
@@ -29,7 +29,7 @@ namespace CorvallisBus.Core.WebClients
     /// <summary>
     /// Contains the task for importing route and schedule data from Google Transit. This task is run once every night.
     /// </summary>
-    public static class GoogleTransitClient
+    internal static class GoogleTransitClient
     {
         /// <summary>
         /// Downloads and interprets the ZIP file CTS uploads for Google.  This is primarily to get route colors and route schedules.

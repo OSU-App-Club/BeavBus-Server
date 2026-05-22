@@ -16,7 +16,7 @@ namespace CorvallisBus.Core.WebClients
     /// <summary>
     /// Exposes methods for retreiving vehicle and service alert data from a Gtfs realtime service
     /// </summary>
-    public class GtfsRealtimeClient(HttpClient client)
+    internal class GtfsRealtimeClient(HttpClient client)
     {
         private const string BASE_URL = "http://www.corvallistransit.com/rtt/public/utility/gtfsrealtime.aspx/";
 

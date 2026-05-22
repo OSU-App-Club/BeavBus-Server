@@ -15,7 +15,7 @@ namespace CorvallisBus.Core.WebClients
     /// <summary>
     /// Exposes methods for getting transit data from Connexionz.
     /// </summary>
-    public static class ConnexionzClient
+    internal static class ConnexionzClient
     {
         private const string BASE_URL = "http://www.corvallistransit.com/rtt/public/utility/file.aspx?contenttype=SQLXML";
 
