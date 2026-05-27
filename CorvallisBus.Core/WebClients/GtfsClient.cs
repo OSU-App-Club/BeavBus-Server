@@ -1,6 +1,4 @@
-﻿using CorvallisBus.Core.Models;
-using CorvallisBus.Core.Models.GoogleTransit;
-using CorvallisBus.Core.Properties;
+﻿using CorvallisBus.Core.Models.Gtfs;
 using CsvHelper;
 using System;
 using System.Collections.Generic;
@@ -8,18 +6,17 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
-using System.Text.RegularExpressions;
 
 namespace CorvallisBus.Core.WebClients
 {
-    internal class GoogleTransitData
+    internal class GtfsData
     {
-        public List<GoogleRoute> Routes { get; }
-        public List<GoogleRouteSchedule> Schedules { get; }
+        public List<GtfsRoute> Routes { get; }
+        public List<GtfsRouteSchedule> Schedules { get; }
 
-        public GoogleTransitData(
-            List<GoogleRoute> routes,
-            List<GoogleRouteSchedule> schedules)
+        public GtfsData(
+            List<GtfsRoute> routes,
+            List<GtfsRouteSchedule> schedules)
         {
             Routes = routes;
             Schedules = schedules;
@@ -27,34 +24,36 @@ namespace CorvallisBus.Core.WebClients
     }
 
     /// <summary>
-    /// Contains the task for importing route and schedule data from Google Transit. This task is run once every night.
+    /// Contains the task for importing route and schedule data from GTFS. This task is run once every night.
     /// </summary>
-    internal static class GoogleTransitClient
+    internal static class GtfsClient
     {
+        private static string GTFS_URL = "http://www.corvallistransit.com/rtt/public/utility/gtfs.aspx";
         /// <summary>
-        /// Downloads and interprets the ZIP file CTS uploads for Google.  This is primarily to get route colors and route schedules.
+        /// Downloads and interprets the ZIP file CTS uploads for GTFS compliance.
+        /// This is primarily to get route colors and route schedules, and mapping of buses to routes/stops
         /// </summary>
-        public static GoogleTransitData LoadData()
+        public static GtfsData LoadData()
         {
-            var stream = new HttpClient().GetStreamAsync("http://www.corvallistransit.com/rtt/public/utility/gtfs.aspx").Result;
+            var stream = new HttpClient().GetStreamAsync(GTFS_URL).Result;
             using var archive = new ZipArchive(stream);
 
             var routesEntry = archive.GetEntry("routes.txt")
-                ?? throw new FileNotFoundException("The Google Transit archive did not contain routes.txt.");
+                ?? throw new FileNotFoundException("The GTFS archive did not contain routes.txt.");
 
             var scheduleEntry = archive.GetEntry("stop_times.txt")
-                ?? throw new FileNotFoundException("The Google Transit archive did not contain stop_times.txt.");
+                ?? throw new FileNotFoundException("The GTFS archive did not contain stop_times.txt.");
 
             var tripsEntry = archive.GetEntry("trips.txt")
-                ?? throw new FileNotFoundException("The Google Transit archive did not contain trips.txt.");
+                ?? throw new FileNotFoundException("The GTFS archive did not contain trips.txt.");
 
             var calendarEntry = archive.GetEntry("calendar.txt")
-                ?? throw new FileNotFoundException("The Google Transit archive did not contain calendar.txt.");
+                ?? throw new FileNotFoundException("The GTFS archive did not contain calendar.txt.");
 
             var routes = ParseRouteCSV(routesEntry);
             var schedules = ParseScheduleCSV(scheduleEntry, tripsEntry, calendarEntry);
 
-            return new GoogleTransitData(
+            return new GtfsData(
                 routes: routes,
                 schedules: schedules
             );
@@ -63,15 +62,15 @@ namespace CorvallisBus.Core.WebClients
         /// <summary>
         /// Reads a ZipArchive entry as the routes CSV and extracts the route colors and URLs.
         /// </summary>
-        private static List<GoogleRoute> ParseRouteCSV(ZipArchiveEntry entry)
+        private static List<GtfsRoute> ParseRouteCSV(ZipArchiveEntry entry)
         {
             using var csv = new CsvReader(new StreamReader(entry.Open()));
-            var records = csv.GetRecords<GoogleRoute>();
+            var records = csv.GetRecords<GtfsRoute>();
             var routes = records.ToList();
             return routes;
         }
 
-        private static List<GoogleRouteSchedule> ParseScheduleCSV(ZipArchiveEntry stopTimesTxt, ZipArchiveEntry tripsTxt, ZipArchiveEntry calendarTxt)
+        private static List<GtfsRouteSchedule> ParseScheduleCSV(ZipArchiveEntry stopTimesTxt, ZipArchiveEntry tripsTxt, ZipArchiveEntry calendarTxt)
         {
             using var stopTimesCsv = new CsvReader(new StreamReader(stopTimesTxt.Open()));
             var stopTimes = stopTimesCsv.GetRecords<StopTimesEntry>();
@@ -91,19 +90,19 @@ namespace CorvallisBus.Core.WebClients
                 .Select(g => g.OrderBy(t => t.stopTime.ArrivalTime)
                     .Aggregate(new List<TimeSpan>(),
                         (times, t) => { times.Add(t.stopTime.ArrivalTime); return times; },
-                        times => new { g.Key.routeNo, g.Key.days, stopSchedule = new GoogleStopSchedule(g.Key.platformTag, times) }));
+                        times => new { g.Key.routeNo, g.Key.days, stopSchedule = new GtfsStopSchedule(g.Key.platformTag, times) }));
 
             var aggStopsForRoute = aggTimesAtStop
                 .GroupBy(t => new { t.routeNo, t.days })
-                .Select(g => g.Aggregate(new List<GoogleStopSchedule>(),
+                .Select(g => g.Aggregate(new List<GtfsStopSchedule>(),
                     (list, t) => { list.Add(t.stopSchedule); return list; },
                     list => new { g.Key.routeNo, g.Key.days, stopSchedules = list }));
 
             var aggDaysForRoute = aggStopsForRoute
                 .GroupBy(t => t.routeNo)
-                .Select(g => g.Aggregate(new List<GoogleDaySchedule>(),
-                    (list, t) => { list.Add(new GoogleDaySchedule(t.days, t.stopSchedules)); return list; },
-                    list => new GoogleRouteSchedule(g.Key, list)))
+                .Select(g => g.Aggregate(new List<GtfsDaySchedule>(),
+                    (list, t) => { list.Add(new GtfsDaySchedule(t.days, t.stopSchedules)); return list; },
+                    list => new GtfsRouteSchedule(g.Key, list)))
                 .ToList();
 
             return aggDaysForRoute;

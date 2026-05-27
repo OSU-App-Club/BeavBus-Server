@@ -4,9 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CorvallisBus.Core.Models.Connexionz;
-using CorvallisBus.Core.Models.GoogleTransit;
-using CorvallisBus.Core.DataAccess;
-using Newtonsoft.Json;
+using CorvallisBus.Core.Models.Gtfs;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Net;
@@ -26,7 +24,7 @@ namespace CorvallisBus.Core.WebClients
         {
             var connexionzPlatforms = ConnexionzClient.LoadPlatforms();
             var connexionzRoutes = ConnexionzClient.LoadRoutes();
-            var googleData = GoogleTransitClient.LoadData();
+            var googleData = GtfsClient.LoadData();
 
             var routes = CreateRoutes(googleData.Routes, connexionzRoutes);
             var stops = CreateStops(connexionzPlatforms, connexionzRoutes);
@@ -175,9 +173,9 @@ namespace CorvallisBus.Core.WebClients
                 .ToList();
         }
 
-        private static List<BusRoute> CreateRoutes(List<GoogleRoute> googleRoutes, List<ConnexionzRoute> connexionzRoutes)
+        private static List<BusRoute> CreateRoutes(List<GtfsRoute> googleRoutes, List<ConnexionzRoute> connexionzRoutes)
         {
-            var googleRoutesDict = googleRoutes.ToDictionary(gr => gr.Name);
+            var googleRoutesDict = googleRoutes.ToDictionary(gr => gr.Id);
             var routes = connexionzRoutes.Where(r => r.IsActive && googleRoutesDict.ContainsKey(r.RouteNo));
             return routes.Select(r => BusRoute.Create(r, googleRoutesDict)).ToList();
         }
@@ -188,7 +186,7 @@ namespace CorvallisBus.Core.WebClients
         /// Creates a bus schedule based on Google Transit data.
         /// </summary>
         public ServerBusSchedule CreateSchedule(
-            List<GoogleRouteSchedule> googleSchedules,
+            List<GtfsRouteSchedule> googleSchedules,
             List<ConnexionzRoute> connexionzRoutes,
             List<ConnexionzPlatform> connexionzPlatforms)
         {

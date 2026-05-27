@@ -1,11 +1,8 @@
 ﻿using CorvallisBus.Core.Models.Connexionz;
-using CorvallisBus.Core.Models.GoogleTransit;
+using CorvallisBus.Core.Models.Gtfs;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace CorvallisBus.Core.Models
 {
@@ -43,7 +40,7 @@ namespace CorvallisBus.Core.Models
         [property: JsonProperty("polyline")]
         string Polyline)
     {
-        public static BusRoute Create(ConnexionzRoute connectionzRoute, Dictionary<string, GoogleRoute> googleRoutes)
+        public static BusRoute Create(ConnexionzRoute connectionzRoute, Dictionary<string, GtfsRoute> googleRoutes)
         {
             var routeNo = connectionzRoute.RouteNo;
             var googleRoute = googleRoutes[routeNo];

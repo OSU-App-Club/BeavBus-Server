@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace CorvallisBus.Core.Models.GoogleTransit
+namespace CorvallisBus.Core.Models.Gtfs
 {
     /// <summary>
     /// Represents the schedule for a route taken from Google Transit.
     /// </summary>
-    public record GoogleRouteSchedule(
+    public record GtfsRouteSchedule(
         string RouteNo,
-        List<GoogleDaySchedule> Days);
+        List<GtfsDaySchedule> Days);
 }

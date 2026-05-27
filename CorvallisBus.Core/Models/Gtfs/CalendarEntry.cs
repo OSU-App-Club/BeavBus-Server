@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CsvHelper.Configuration.Attributes;
+﻿using CsvHelper.Configuration.Attributes;
 
-namespace CorvallisBus.Core.Models.GoogleTransit
+namespace CorvallisBus.Core.Models.Gtfs
 {
     class CalendarEntry
     {

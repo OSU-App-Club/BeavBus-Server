@@ -3,10 +3,8 @@ using CsvHelper.Configuration;
 using CsvHelper.Configuration.Attributes;
 using CsvHelper.TypeConversion;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace CorvallisBus.Core.Models.GoogleTransit
+namespace CorvallisBus.Core.Models.Gtfs
 {
     class StopTimesEntry
     {

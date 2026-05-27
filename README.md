@@ -22,7 +22,7 @@ $ curl -d {} localhost:57855/api/job/init
 
 ## Purpose
 
-To have a more convenient way to get real-time information about the free buses in Corvallis.  Data from CTS is merged with data from Google Transit, with some convenient projections applied, and mapped into some easily-digestable JSON for different use cases.
+To have a more convenient way to get real-time information about the free buses in Corvallis.  Data from CTS is merged with data from Corvallis' GTFS data, with some convenient projections applied, and mapped into some easily-digestable JSON for different use cases.
 
 ## Disclaimer
 
