@@ -25,16 +25,10 @@ namespace CorvallisBus.Controllers
                 ? "Pacific Standard Time"
                 : "America/Los_Angeles";
 
-        private readonly string _webRootPath;
-        private readonly ITransitRepository _repository;
-        private readonly ITransitClient _client;
         private readonly Func<DateTimeOffset> _getCurrentTime;
 
-        public TransitApiController(IWebHostEnvironment env, TransitClient client)
+        public TransitApiController(IWebHostEnvironment env)
         {
-            _webRootPath = env.WebRootPath;
-            _repository = new MemoryTransitRepository(env.WebRootPath);
-            _client = client;
             _getCurrentTime = () => TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.Now, _destinationTimeZoneId);
         }
 
@@ -61,7 +55,7 @@ namespace CorvallisBus.Controllers
         [Produces("application/json")]
         [ProducesResponseType<BusStaticData>(200)]
         [Tags(["CTS"])]
-        public ActionResult GetStaticData()
+        public ActionResult GetStaticData(ITransitRepository _repository)
         {
             return PhysicalFile(_repository.StaticDataPath, "application/json");
         }
@@ -85,7 +79,7 @@ namespace CorvallisBus.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
         [Tags(["CTS"])]
-        public async Task<ActionResult> GetETAs([FromQuery, BindRequired]List<int> stopIds)
+        public async Task<ActionResult> GetETAs([FromQuery, BindRequired]List<int> stopIds, ITransitRepository _repository, ITransitClient _client)
         {
             if (stopIds == null || stopIds.Count == 0)
             {
@@ -127,7 +121,7 @@ namespace CorvallisBus.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
         [Tags(["CTS"])]
-        public async Task<ActionResult> GetSchedule([FromQuery, BindRequired]List<int> stopIds)
+        public async Task<ActionResult> GetSchedule([FromQuery, BindRequired]List<int> stopIds, ITransitRepository _repository, ITransitClient _client)
         {
             if (stopIds == null || stopIds.Count == 0)
             {
@@ -163,7 +157,7 @@ namespace CorvallisBus.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
         [Tags(["CTS"])]
-        public async Task<ActionResult> GetArrivalsSummary([FromQuery, BindRequired]List<int> stopIds)
+        public async Task<ActionResult> GetArrivalsSummary([FromQuery, BindRequired]List<int> stopIds, ITransitRepository _repository, ITransitClient _client)
         {
             if (stopIds == null || stopIds.Count == 0)
             {
@@ -191,7 +185,7 @@ namespace CorvallisBus.Controllers
         [ProducesResponseType<List<ServiceAlert>>(200)]
         [ProducesResponseType(500)]
         [Tags(["CTS"])]
-        public async Task<ActionResult> GetServiceAlerts()
+        public async Task<ActionResult> GetServiceAlerts(ITransitRepository _repository, ITransitClient _client)
         {
             var alerts = await TransitManager.GetServiceAlerts(_repository, _client);
             var alertsJson = JsonConvert.SerializeObject(alerts);
@@ -203,7 +197,7 @@ namespace CorvallisBus.Controllers
         /// </summary>
         [HttpPost("job/init")]
         [ApiExplorerSettings(IgnoreApi = true)] // Private API
-        public ActionResult Init()
+        public ActionResult Init(ITransitRepository _repository, ITransitClient _client)
         {
             var expectedAuth = Environment.GetEnvironmentVariable("CorvallisBusAuthorization");
             if (!string.IsNullOrEmpty(expectedAuth))
@@ -217,10 +211,10 @@ namespace CorvallisBus.Controllers
 
             try
             {
-                var errors = DataLoadJob();
+                var errors = DataLoadJob(_repository, _client);
                 if (errors.Count != 0)
                 {
-                    var message = GetValidationErrorMessage(errors);
+                    var message = GetValidationErrorMessage(_repository, _client, errors);
                     SendNotification("corvallisb.us init job had validation errors", message).Wait();
                     return Ok(message);
                 }
@@ -229,12 +223,12 @@ namespace CorvallisBus.Controllers
             }
             catch (Exception ex)
             {
-                SendExceptionNotification(ex).Wait();
+                SendExceptionNotification(_repository, _client, ex).Wait();
                 throw;
             }
         }
 
-        private Task SendExceptionNotification(Exception ex)
+        private Task SendExceptionNotification(ITransitRepository _repository, ITransitClient _client, Exception ex)
         {
             var lastWriteTime = System.IO.File.GetLastWriteTime(_repository.StaticDataPath);
             var htmlContent =
@@ -245,7 +239,7 @@ $@"<h2>Init job failed: {ex.Message}</h2>
             return SendNotification(subject: "corvallisb.us init task threw an exception", htmlContent);
         }
 
-        private string GetValidationErrorMessage(List<string> errors)
+        private string GetValidationErrorMessage(ITransitRepository _repository, ITransitClient _client, List<string> errors)
         {
             var lastWriteTime = System.IO.File.GetLastWriteTime(_repository.StaticDataPath);
             return $@"<h2>Init job had {errors.Count} validation errors</h2>
@@ -271,7 +265,7 @@ $@"<h2>Init job failed: {ex.Message}</h2>
             _ = await client.SendEmailAsync(msg);
         }
 
-        private List<string> DataLoadJob()
+        private List<string> DataLoadJob(ITransitRepository _repository, ITransitClient _client)
         {
             var (busSystemData, errors) = _client.LoadTransitData();
 

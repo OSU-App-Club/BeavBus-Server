@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
 using CorvallisBus.Core.WebClients;
+using CorvallisBus.Core.DataAccess;
 
 namespace CorvallisBus.Web
 {
@@ -67,6 +68,8 @@ Buses may be erratic in their arrival behavior, and we cannot control that.";
             });
             services.AddMvc(option => option.EnableEndpointRouting = false);
 
+
+            services.AddSingleton<ITransitRepository>(provider => new MemoryTransitRepository(provider.GetService<IWebHostEnvironment>().WebRootPath));
             services.AddHttpClient<TransitClient>();
         }
 
