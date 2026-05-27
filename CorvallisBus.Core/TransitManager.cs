@@ -4,6 +4,7 @@ using CorvallisBus.Core.Models.Connexionz;
 using CorvallisBus.Core.WebClients;
 using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -177,6 +178,26 @@ namespace CorvallisBus
                           .ToList();
 
             return arrivalsSummaries;
+        }
+
+        /// <summary>
+        /// Retrieve Service Alerts
+        /// </summary>
+        /// <param name="repository">A data repository</param>
+        /// <param name="client">A Transit Client</param>
+        /// <returns></returns>
+        public static async Task<List<ServiceAlert>> GetServiceAlerts(ITransitRepository repository, ITransitClient client)
+        {
+            var alerts = await repository.GetServiceAlertsAsync();
+
+            if (alerts is null)
+            {
+                alerts = await client.GetServiceAlerts(null);
+            }
+
+            List<ServiceAlert>? activeAlerts = alerts?.Item1;
+
+            return activeAlerts ?? new List<ServiceAlert> { };
         }
     }
 }

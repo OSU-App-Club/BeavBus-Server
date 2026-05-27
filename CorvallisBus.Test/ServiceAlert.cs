@@ -70,7 +70,7 @@ namespace CorvallisBus.Test
             Assert.NotNull(alert);
 
             string json = JsonConvert.SerializeObject(alert);
-            Assert.Equal("{\"title\":\"4/6-4/7 Routes 3, 8 & PC Detours\",\"description\":\"This is a test Alert Message\"}", json);
+            Assert.Equal("{\"id\":\"1\",\"title\":\"4/6-4/7 Routes 3, 8 & PC Detours\",\"description\":\"This is a test Alert Message\"}", json);
         }
     }
 }

@@ -15,6 +15,6 @@ namespace CorvallisBus.Core.WebClients
         /// Fetch the latest service alerts
         /// </summary>
         /// <returns>A List of service alerts</returns>
-        Task<List<ServiceAlert>?> GetServiceAlerts(DateTimeOffset? lastSavedTimestamp);
+        Task<(List<ServiceAlert>, ulong)?> GetServiceAlerts(DateTimeOffset? lastSavedTimestamp);
     }
 }

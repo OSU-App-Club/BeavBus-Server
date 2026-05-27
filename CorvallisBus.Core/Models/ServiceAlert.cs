@@ -8,6 +8,9 @@ namespace CorvallisBus.Core.Models
     /// <summary>
     /// Represents a Service Alert.
     /// </summary>
+    /// <param name="Id">
+    /// ID of the Alert
+    /// </param>
     /// <param name="Title">
     /// Title of the alert. Usually this contains details like the affected routes.
     /// </param>
@@ -15,6 +18,9 @@ namespace CorvallisBus.Core.Models
     /// Description of the alert.
     /// </param>
     public record ServiceAlert(
+        [property: JsonProperty("id")]
+        string Id,
+
         [property: JsonProperty("title")]
         string Title,
 
@@ -45,6 +51,7 @@ namespace CorvallisBus.Core.Models
                 throw new Exception("Entity '" + alert.Id + "' has more than one description for language '" + language_code + "'");
 
             return new ServiceAlert(
+                alert.Id,
                 header.SingleOrDefault("No Title Provided"),
                 description.SingleOrDefault("No Description Provided")
             );

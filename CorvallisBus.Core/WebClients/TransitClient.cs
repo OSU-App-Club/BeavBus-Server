@@ -225,10 +225,7 @@ namespace CorvallisBus.Core.WebClients
             return result;
         }
 
-        /// <summary>
-        /// Fetch the latest service alerts
-        /// </summary>
-        /// <returns>A List of service alerts</returns>
-        public async Task<List<ServiceAlert>?> GetServiceAlerts(DateTimeOffset? lastSavedTimestamp) => await gtfsRealtimeClient.GetServiceAlerts(lastSavedTimestamp);
+        /// <inheritdoc/>
+        public async Task<(List<ServiceAlert>, ulong)?> GetServiceAlerts(DateTimeOffset? lastSavedTimestamp) => await gtfsRealtimeClient.GetServiceAlerts(lastSavedTimestamp);
     }
 }

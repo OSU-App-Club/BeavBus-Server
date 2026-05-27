@@ -26,10 +26,22 @@ namespace CorvallisBus.Core.DataAccess
 
         Task<ServerBusSchedule> GetScheduleAsync();
 
+        /// <summary>
+        /// Get Service Alerts from Repository
+        /// </summary>
+        /// <returns>Tuple of Service Alerts and timestamp</returns>
+        Task<(List<ServiceAlert>, ulong)?> GetServiceAlertsAsync();
+
         void SetStaticData(BusStaticData staticData);
 
         void SetSchedule(ServerBusSchedule schedule);
 
         void SetPlatformTags(Dictionary<int, int> platformTags);
+
+        /// <summary>
+        /// Save Service Alerts into Repository
+        /// </summary>
+        /// <param name="serviceAlerts">List of Service Alerts</param>
+        void SetServiceAlerts((List<ServiceAlert>, ulong)? serviceAlerts);
     }
 }

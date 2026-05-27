@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using CorvallisBus.Core.Models;
 using Newtonsoft.Json;
@@ -18,12 +16,18 @@ namespace CorvallisBus.Core.DataAccess
         private static ServerBusSchedule? s_schedule;
         private static string? s_serializedStaticData;
         private static BusStaticData? s_staticData;
+        private static (List<ServiceAlert>, ulong)? s_serviceAlerts;
 
         private readonly string _platformTagsPath;
         private readonly string _schedulePath;
 
+        /// <inheritdoc/>
         public string StaticDataPath { get; }
 
+        /// <summary>
+        /// Create an in-memory and local repository
+        /// </summary>
+        /// <param name="filePath">Location on disk to store permanent data</param>
         public MemoryTransitRepository(string filePath)
         {
             var folder = filePath + "/cache";
@@ -34,6 +38,7 @@ namespace CorvallisBus.Core.DataAccess
             StaticDataPath = folder + "/staticData.json";
         }
 
+        /// <inheritdoc/>
         public Task<Dictionary<int, int>> GetPlatformTagsAsync()
         {
             if (s_platformTags == null)
@@ -43,6 +48,7 @@ namespace CorvallisBus.Core.DataAccess
             return Task.FromResult(s_platformTags);
         }
 
+        /// <inheritdoc/>
         public Task<ServerBusSchedule> GetScheduleAsync()
         {
             if (s_schedule == null)
@@ -52,6 +58,7 @@ namespace CorvallisBus.Core.DataAccess
             return Task.FromResult(s_schedule);
         }
 
+        /// <inheritdoc/>
         public Task<string> GetSerializedStaticDataAsync()
         {
             if (s_serializedStaticData == null)
@@ -61,6 +68,7 @@ namespace CorvallisBus.Core.DataAccess
             return Task.FromResult(s_serializedStaticData);
         }
 
+        /// <inheritdoc/>
         public async Task<BusStaticData> GetStaticDataAsync()
         {
             if (s_staticData == null)
@@ -70,23 +78,38 @@ namespace CorvallisBus.Core.DataAccess
             return s_staticData;
         }
 
+        /// <inheritdoc/>
+        public async Task<(List<ServiceAlert>, ulong)?> GetServiceAlertsAsync()
+        {
+            return s_serviceAlerts;
+        }
+
+        /// <inheritdoc/>
         public void SetPlatformTags(Dictionary<int, int> platformTags)
         {
             s_platformTags = platformTags;
             File.WriteAllText(_platformTagsPath, JsonConvert.SerializeObject(platformTags));
         }
 
+        /// <inheritdoc/>
         public void SetSchedule(ServerBusSchedule schedule)
         {
             s_schedule = schedule;
             File.WriteAllText(_schedulePath, JsonConvert.SerializeObject(schedule));
         }
 
+        /// <inheritdoc/>
         public void SetStaticData(BusStaticData staticData)
         {
             s_staticData = staticData;
             s_serializedStaticData = JsonConvert.SerializeObject(staticData);
             File.WriteAllText(StaticDataPath, JsonConvert.SerializeObject(staticData));
+        }
+
+        /// <inheritdoc/>
+        public void SetServiceAlerts((List<ServiceAlert>, ulong)? serviceAlerts)
+        {
+            s_serviceAlerts = serviceAlerts;
         }
     }
 }

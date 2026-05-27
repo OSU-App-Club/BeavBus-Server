@@ -47,11 +47,13 @@ namespace CorvallisBus.Test
             GtfsRealtimeMessageHandler? mockHttp = new GtfsRealtimeMessageHandler(res);
             TransitClient underTest = new TransitClient(new HttpClient(mockHttp));
 
-            List<ServiceAlert>? alerts = await underTest.GetServiceAlerts(null);
+            (List<ServiceAlert>, ulong)? fullAlertObject = await underTest.GetServiceAlerts(null);
+            Assert.NotNull(fullAlertObject);
+            List<ServiceAlert> alerts = fullAlertObject.Value.Item1;
 
             Assert.NotNull(alerts);
             Assert.Single(alerts);
-            
+
             ServiceAlert alert = alerts.First();
 
             Assert.Equal("4/6-4/7 Routes 3, 8 & PC Detours", alert.Title);
@@ -68,7 +70,7 @@ namespace CorvallisBus.Test
             GtfsRealtimeMessageHandler? mockHttp = new GtfsRealtimeMessageHandler(res);
             TransitClient underTest = new TransitClient(new HttpClient(mockHttp));
 
-            List<ServiceAlert>? alerts = await underTest.GetServiceAlerts(DateTimeOffset.FromUnixTimeSeconds(1776316799));
+            (List<ServiceAlert>, ulong)? alerts = await underTest.GetServiceAlerts(DateTimeOffset.FromUnixTimeSeconds(1776316799));
 
             Assert.NotNull(alerts);
         }
@@ -83,7 +85,7 @@ namespace CorvallisBus.Test
             GtfsRealtimeMessageHandler? mockHttp = new GtfsRealtimeMessageHandler(res);
             TransitClient underTest = new TransitClient(new HttpClient(mockHttp));
 
-            List<ServiceAlert>? alerts = await underTest.GetServiceAlerts(DateTimeOffset.FromUnixTimeSeconds(1776316800));
+            (List<ServiceAlert>, ulong)? alerts = await underTest.GetServiceAlerts(DateTimeOffset.FromUnixTimeSeconds(1776316800));
 
             Assert.Null(alerts);
         }
@@ -98,7 +100,7 @@ namespace CorvallisBus.Test
             GtfsRealtimeMessageHandler? mockHttp = new GtfsRealtimeMessageHandler(res);
             TransitClient underTest = new TransitClient(new HttpClient(mockHttp));
 
-            List<ServiceAlert>? alerts = await underTest.GetServiceAlerts(DateTimeOffset.FromUnixTimeSeconds(1776316801));
+            (List<ServiceAlert>, ulong)? alerts = await underTest.GetServiceAlerts(DateTimeOffset.FromUnixTimeSeconds(1776316801));
 
             Assert.Null(alerts);
         }

@@ -35,7 +35,7 @@ namespace CorvallisBus.Core.WebClients
             ulong timestamp = message.Header.Timestamp;
 
             // If the last saved timestamp is less than the new timestamp, then the data is newer and should be used
-            return ((ulong) lastSavedTimestamp.ToUnixTimeSeconds()) < timestamp ? (message.Entities, timestamp) : null;
+            return ((ulong)lastSavedTimestamp.ToUnixTimeSeconds()) < timestamp ? (message.Entities, timestamp) : null;
         }
 
         /// <summary>
@@ -46,34 +46,41 @@ namespace CorvallisBus.Core.WebClients
         /// A List of Service Alerts, or Null if no new service alerts are present. Note that Null means that the data
         /// should not be updated, not that no data exists.
         /// </returns>
-        public async Task<List<ServiceAlert>?> GetServiceAlerts(DateTimeOffset? lastSavedTimestamp)
+        public async Task<(List<ServiceAlert>, ulong)?> GetServiceAlerts(DateTimeOffset? lastSavedTimestamp)
         {
             Entity alerts = await GetEntityAsync("alert", lastSavedTimestamp ?? DateTimeOffset.UnixEpoch);
 
             if (alerts is null) return null;
 
-            return alerts?.Item1
-                .Select(a =>
+            List<ServiceAlert>? alertsList = alerts?.Item1
+            .Select(a =>
+            {
+                Func<TranslatedString, string?> languageCodeFunc = t =>
                 {
-                    Func<TranslatedString, string?> languageCodeFunc = t =>
-                    {
-                        if (t.Translations.Count == 0) return null;
-                        return t.Translations.First().Language;
-                    };
+                    if (t.Translations.Count == 0) return null;
+                    return t.Translations.First().Language;
+                };
 
-                    string? languageCode = a.Alert.HeaderText is not null ?
-                        languageCodeFunc(a.Alert.HeaderText) :
-                        languageCodeFunc(a.Alert.DescriptionText);
+                string? languageCode = a.Alert.HeaderText is not null ?
+                    languageCodeFunc(a.Alert.HeaderText) :
+                    languageCodeFunc(a.Alert.DescriptionText);
 
-                    try {
-                        return ServiceAlert.Create(a, languageCode ?? "");
-                    } catch {
-                        return null;
-                    }  
-                })
-                .Where(sa => sa is not null)
-                .Select(sa => sa!)
-                .ToList();
+                try
+                {
+                    return ServiceAlert.Create(a, languageCode ?? "");
+                }
+                catch
+                {
+                    return null;
+                }
+            })
+            .Where(sa => sa is not null)
+            .Select(sa => sa!)
+            .ToList();
+
+            if (alertsList is null) return null;
+
+            return (alertsList, alerts?.Item2 ?? (ulong)DateTimeOffset.UnixEpoch.ToUnixTimeSeconds());
         }
     }
 }
