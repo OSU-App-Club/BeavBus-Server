@@ -7,7 +7,7 @@ using CorvallisBus.Core.Models.Connexionz;
 using CorvallisBus.Core.Models.Gtfs;
 using System.Diagnostics;
 using System.Net.Http;
-using System.Net;
+using CorvallisBus.Core.Models.GtfsRealtime;
 
 namespace CorvallisBus.Core.WebClients
 {
@@ -225,5 +225,8 @@ namespace CorvallisBus.Core.WebClients
 
         /// <inheritdoc/>
         public async Task<(List<ServiceAlert>, ulong)?> GetServiceAlerts(DateTimeOffset? lastSavedTimestamp) => await gtfsRealtimeClient.GetServiceAlerts(lastSavedTimestamp);
+
+        /// <inheritdoc/>
+        public async Task<List<GtfsVehiclePosition>?> GetVehiclePositions(DateTimeOffset? lastSavedTimestamp) => await gtfsRealtimeClient.GetVehiclePositions(lastSavedTimestamp);
     }
 }
