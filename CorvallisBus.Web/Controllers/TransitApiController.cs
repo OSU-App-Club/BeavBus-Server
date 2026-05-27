@@ -183,15 +183,19 @@ namespace CorvallisBus.Controllers
         }
 
         /// <summary>
-        /// Redirects to the official CTS service alerts page.
+        /// Retreives any active Service Alerts
         /// </summary>
-        /// <response code="302">Redirects to the service alerts page.</response>
+        /// <response code="200">A list with all active service alerts</response>
         [HttpGet("service-alerts")]
-        [ProducesResponseType(302)]
+        [Produces("application/json")]
+        [ProducesResponseType<List<ServiceAlert>>(200)]
+        [ProducesResponseType(500)]
         [Tags(["CTS"])]
-        public ActionResult GetServiceAlertsWebsite()
+        public async Task<ActionResult> GetServiceAlerts()
         {
-            return Redirect("https://www.corvallisoregon.gov/news?field_microsite_tid=581");
+            var alerts = await TransitManager.GetServiceAlerts(_repository, _client);
+            var alertsJson = JsonConvert.SerializeObject(alerts);
+            return Content(alertsJson, "application/json");
         }
 
         /// <summary>
