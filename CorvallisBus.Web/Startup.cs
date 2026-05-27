@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
 using CorvallisBus.Core.WebClients;
 using CorvallisBus.Core.DataAccess;
+using CorvallisBus.Core;
 
 namespace CorvallisBus.Web
 {
@@ -68,9 +69,9 @@ Buses may be erratic in their arrival behavior, and we cannot control that.";
             });
             services.AddMvc(option => option.EnableEndpointRouting = false);
 
-
-            services.AddSingleton<ITransitRepository>(provider => new MemoryTransitRepository(provider.GetService<IWebHostEnvironment>().WebRootPath));
-            services.AddHttpClient<TransitClient>();
+            services.AddSingleton<ITransitRepository, MemoryTransitRepository>();
+            services.AddHttpClient<ITransitClient, TransitClient>();
+            services.AddHostedService<Worker>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

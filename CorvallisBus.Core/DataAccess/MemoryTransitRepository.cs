@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CorvallisBus.Core.Models;
 using Newtonsoft.Json;
 using System.IO;
+using Microsoft.Extensions.Hosting;
 
 namespace CorvallisBus.Core.DataAccess
 {
@@ -27,10 +28,10 @@ namespace CorvallisBus.Core.DataAccess
         /// <summary>
         /// Create an in-memory and local repository
         /// </summary>
-        /// <param name="filePath">Location on disk to store permanent data</param>
-        public MemoryTransitRepository(string filePath)
+        /// <param name="env">Location on disk to store permanent data</param>
+        public MemoryTransitRepository(IHostEnvironment env)
         {
-            var folder = filePath + "/cache";
+            var folder = env.ContentRootPath + "/cache";
             Directory.CreateDirectory(folder);
 
             _platformTagsPath = folder + "/platformTags.json";
