@@ -14,15 +14,18 @@ namespace CorvallisBus.Core.WebClients
         public List<GtfsRoute> Routes { get; }
 
         public List<GtfsStop> Stops { get; }
+        public List<TripsEntry> Trips { get; }
         public List<GtfsRouteSchedule> Schedules { get; }
 
         public GtfsData(
             List<GtfsRoute> routes,
             List<GtfsStop> stops,
+            List<TripsEntry> trips,
             List<GtfsRouteSchedule> schedules)
         {
             Routes = routes;
             Stops = stops;
+            Trips = trips;
             Schedules = schedules;
         }
     }
@@ -59,11 +62,13 @@ namespace CorvallisBus.Core.WebClients
 
             var routes = ParseRouteCSV(routesEntry);
             var stops = ParseStopCSV(stopsEntry);
+            var trips = ParseTripsCSV(tripsEntry);
             var schedules = ParseScheduleCSV(scheduleEntry, tripsEntry, calendarEntry);
 
             return new GtfsData(
                 routes: routes,
                 stops: stops,
+                trips: trips,
                 schedules: schedules
             );
         }
@@ -85,6 +90,14 @@ namespace CorvallisBus.Core.WebClients
             var records = csv.GetRecords<GtfsStop>();
             var stops = records.ToList();
             return stops;
+        }
+
+        private static List<TripsEntry> ParseTripsCSV(ZipArchiveEntry entry)
+        {
+            using var tripsCsv = new CsvReader(new StreamReader(entry.Open()));
+            var records = tripsCsv.GetRecords<TripsEntry>();
+            var trips = records.ToList();
+            return trips;
         }
 
         private static List<GtfsRouteSchedule> ParseScheduleCSV(ZipArchiveEntry stopTimesTxt, ZipArchiveEntry tripsTxt, ZipArchiveEntry calendarTxt)

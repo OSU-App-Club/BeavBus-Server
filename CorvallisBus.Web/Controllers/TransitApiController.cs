@@ -140,6 +140,37 @@ namespace CorvallisBus.Controllers
             }
         }
 
+        /// For the time being, it's recommended to use the endpoints which interpret these times and produce user-friendly descriptions for you, such as `/arrivals-summary`.
+        /// </remarks>
+        /// <param name="stopIds" type="array">Stop IDs to get schedules for</param>
+        /// <response code="200">A nested dictionary which groups the arrival times first by stop, then by route name.</response>
+        /// <response code="400">An error occured validating the Stop IDs</response>
+        [HttpGet("bus")]
+        [Produces("application/json")]
+        [ProducesResponseType<List<BusDetails>>(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        [Tags(["CTS"])]
+        public async Task<ActionResult> GetBus([FromQuery]List<int> busIds, ITransitRepository _repository, ITransitClient _client)
+        {
+            try
+            {
+                var busDetails = await TransitManager.GetBusDetails(_repository, _client);
+                if (busIds.Count > 0)
+                {
+                    Console.WriteLine("asdfasdfsadf");
+                    busDetails = busDetails.Where(su => busIds.Contains(int.Parse(su.Id))).ToList();
+                }
+
+                var busDetailsJson = JsonConvert.SerializeObject(busDetails);
+                return Content(busDetailsJson, "application/json");
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
+
         /// <summary>
         /// Gets an arrivals summary for the given stop IDs.
         /// </summary>

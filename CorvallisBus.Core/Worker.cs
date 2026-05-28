@@ -75,7 +75,8 @@ namespace CorvallisBus.Core
             if (currentAlerts is not null) timestamp = DateTimeOffset.FromUnixTimeSeconds((long)currentAlerts.Value.Item2);
 
             var alerts = await _client.GetServiceAlerts(timestamp);
-            _repository.SetServiceAlerts(alerts);
+            if (alerts is not null)
+                _repository.SetServiceAlerts(alerts);
 
             // Bus Positions
 
@@ -87,7 +88,18 @@ namespace CorvallisBus.Core
             );
 
             var positions = await _client.GetVehiclePositions(pos_timestamp);
-            _repository.SetBusPositions(positions);
+            if (positions is not null)
+                _repository.SetBusPositions(positions);
+
+            // Trip Updates
+
+            (List<BusDetails>, ulong)? busDetails = await _repository.GetBusDetailsAsync();
+            DateTimeOffset? detailTimestamp = null;
+            if (busDetails is not null) detailTimestamp = DateTimeOffset.FromUnixTimeSeconds((long) (busDetails?.Item2 ?? 0));
+
+            var details = await _client.GetBusDetails(detailTimestamp);
+            if (details is not null)
+                _repository.SetBusDetails(details);
         }
     }
 }

@@ -12,6 +12,13 @@ namespace CorvallisBus.Core.WebClients
         Task<ConnexionzPlatformET?> GetEta(int platformTag);
 
         /// <summary>
+        /// Fetch details for all buses
+        /// </summary>
+        /// <param name="lastSavedTimestamp">Last saved timestamp, or NULL to fetch all data</param>
+        /// <returns>A List of bus details</returns>
+        Task<(List<BusDetails>, ulong)?> GetBusDetails(DateTimeOffset? lastSavedTimestamp);
+
+        /// <summary>
         /// Fetch the latest service alerts
         /// </summary>
         /// <param name="lastSavedTimestamp">Last saved timestamp, or NULL to fetch all data</param>

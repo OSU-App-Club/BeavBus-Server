@@ -99,5 +99,22 @@ namespace CorvallisBus.Core.WebClients
 
             return positionsList;
         }
+
+        public async Task<(List<Models.GtfsRealtime.TripUpdate>, ulong)?> GetTripUpdates(DateTimeOffset? lastSavedTimestamp)
+        {
+            Entity updates = await GetEntityAsync("tripupdate", lastSavedTimestamp ?? DateTimeOffset.UnixEpoch);
+
+            if (updates is null) return null;
+
+            List<Models.GtfsRealtime.TripUpdate>? updatesList = updates?.Item1
+                .Select(Models.GtfsRealtime.TripUpdate.Create)
+                .Where(tu => tu is not null)
+                .Select(tu => tu!)
+                .ToList();
+            
+            if (updatesList is null) return null;
+
+            return (updatesList, updates?.Item2 ?? (ulong)DateTimeOffset.UnixEpoch.ToUnixTimeSeconds());
+        }
     }
 }

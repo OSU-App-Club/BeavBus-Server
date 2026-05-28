@@ -217,5 +217,23 @@ namespace CorvallisBus
 
             return positions ?? new List<BusPosition> { };
         }
+
+        /// <summary>
+        /// Retrieve Bus Details
+        /// </summary>
+        /// <param name="repository">A data repository</param>
+        /// <param name="client">A Transit Client</param>
+        /// <returns>List of bus details</returns>
+        public static async Task<List<BusDetails>> GetBusDetails(ITransitRepository repository, ITransitClient client)
+        {
+            var details = await repository.GetBusDetailsAsync();
+
+            if (details is null)
+            {
+                details = await client.GetBusDetails(null);
+            }
+
+            return details?.Item1 ?? new List<BusDetails> { };
+        }
     }
 }

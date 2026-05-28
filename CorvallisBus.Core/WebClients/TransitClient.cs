@@ -223,6 +223,31 @@ namespace CorvallisBus.Core.WebClients
         }
 
         /// <inheritdoc/>
+        public async Task<(List<BusDetails>, ulong)?> GetBusDetails(DateTimeOffset? lastSavedTimestamp)
+        {
+            var bus = await gtfsRealtimeClient.GetTripUpdates(lastSavedTimestamp);
+            var gtfsData = GtfsClient.LoadData();
+            var trips = gtfsData.Trips;
+            var stops = gtfsData.Stops;
+
+            var CreateBusDetailsForTripUpdate = (Models.GtfsRealtime.TripUpdate tu) =>
+            {
+                var trip = trips.Find(t => t.TripId == int.Parse(tu.TripId));
+                var stop = tu.Stops.Join(stops, tu => tu.StopId, s => s.InternalId, (stop1, stop2) => (stop1, stop2));
+
+                var currentStop = stop.Where(s1 => s1.stop1.State == Models.GtfsRealtime.StopState.Stopped)
+                    .Select(s => s.stop2.Id).FirstOrDefault();
+                var stoppingAt = stop.Where(s1 => s1.stop1.State == Models.GtfsRealtime.StopState.InTransit).ToDictionary(s => s.stop2.Id, p => p.stop1.ArrivalTime ?? 0);
+
+                return BusDetails.Create(tu, trip?.RouteId ?? "", currentStop ?? "", stoppingAt);  
+            };
+
+            if (bus is null) return null;
+
+            return (bus?.Item1.Select(CreateBusDetailsForTripUpdate).ToList() ?? new List<BusDetails> { }, bus?.Item2 ?? 0);
+        }
+
+        /// <inheritdoc/>
         public async Task<(List<ServiceAlert>, ulong)?> GetServiceAlerts(DateTimeOffset? lastSavedTimestamp) => await gtfsRealtimeClient.GetServiceAlerts(lastSavedTimestamp);
 
         /// <inheritdoc/>
