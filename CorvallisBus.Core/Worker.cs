@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CorvallisBus.Core.DataAccess;
@@ -75,6 +76,18 @@ namespace CorvallisBus.Core
 
             var alerts = await _client.GetServiceAlerts(timestamp);
             _repository.SetServiceAlerts(alerts);
+
+            // Bus Positions
+
+            List<BusPosition>? busPositions = await _repository.GetBusPositionsAsync();
+            DateTimeOffset? pos_timestamp = null;
+
+            if (busPositions is not null) pos_timestamp = DateTimeOffset.FromUnixTimeMilliseconds(
+                (long) (busPositions?.Select(p => p.Timestamp).Max() ?? 0)
+            );
+
+            var positions = await _client.GetVehiclePositions(pos_timestamp);
+            _repository.SetBusPositions(positions?.Select(BusPosition.Create).ToList());
         }
     }
 }

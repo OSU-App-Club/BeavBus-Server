@@ -199,5 +199,27 @@ namespace CorvallisBus
 
             return activeAlerts ?? new List<ServiceAlert> { };
         }
+
+        /// <summary>
+        /// Retrieve Bus Positions
+        /// </summary>
+        /// <param name="repository">A data repository</param>
+        /// <param name="client">A Transit Client</param>
+        /// <returns>A List of Bus Positions</returns>
+        public static async Task<List<BusPosition>> GetBusPositions(ITransitRepository repository, ITransitClient client)
+        {
+            var positions = await repository.GetBusPositionsAsync();
+
+            if (positions is null)
+            {
+                var vehicleData = await client.GetVehiclePositions(null);
+
+                positions = vehicleData?
+                    .Select(BusPosition.Create)
+                    .ToList();
+            }
+
+            return positions ?? new List<BusPosition> { };
+        }
     }
 }

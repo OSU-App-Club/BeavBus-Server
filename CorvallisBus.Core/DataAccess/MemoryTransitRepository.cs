@@ -18,6 +18,7 @@ namespace CorvallisBus.Core.DataAccess
         private static string? s_serializedStaticData;
         private static BusStaticData? s_staticData;
         private static (List<ServiceAlert>, ulong)? s_serviceAlerts;
+        private static List<BusPosition>? s_busPositions;
 
         private readonly string _platformTagsPath;
         private readonly string _schedulePath;
@@ -86,6 +87,12 @@ namespace CorvallisBus.Core.DataAccess
         }
 
         /// <inheritdoc/>
+        public async Task<List<BusPosition>?> GetBusPositionsAsync()
+        {
+            return s_busPositions;
+        }
+
+        /// <inheritdoc/>
         public void SetPlatformTags(Dictionary<int, int> platformTags)
         {
             s_platformTags = platformTags;
@@ -111,6 +118,12 @@ namespace CorvallisBus.Core.DataAccess
         public void SetServiceAlerts((List<ServiceAlert>, ulong)? serviceAlerts)
         {
             s_serviceAlerts = serviceAlerts;
+        }
+
+        /// <inheritdoc/>
+        public void SetBusPositions(List<BusPosition>? busPositions)
+        {
+            s_busPositions = busPositions;
         }
     }
 }

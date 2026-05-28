@@ -138,20 +138,19 @@ namespace CorvallisBus.Test
         }
 
         [Theory]
-        [InlineData(0, "1", "749", "277", 44.5647659, -123.263306, 0.0, 1, VehiclePositionStopStatus.Stopped)]
-        [InlineData(1, "4", "761", "640", 44.5646858, -123.263367, 7.0, 11, VehiclePositionStopStatus.InTransit)]
-        public void Gtfs_VehiclePosition_Deserialization_Record(int VehicleIndex, string VehicleId, string VehicleLabel, string VehicleTripId, float VehicleLatitude, float VehicleLongitude, float VehicleSpeed, int VehicleStopSeq, VehiclePositionStopStatus VehicleStopStatus)
+        [InlineData(0, "1", "749", 1779327322, "277", 44.5647659, -123.263306, 0.0, 1, VehiclePositionStopStatus.Stopped)]
+        [InlineData(1, "4", "761", 1779327301, "640", 44.5646858, -123.263367, 7.0, 11, VehiclePositionStopStatus.InTransit)]
+        public void Gtfs_VehiclePosition_Deserialization_Record(int VehicleIndex, string VehicleId, string VehicleLabel, long VehicleTimestamp, string VehicleTripId, float VehicleLatitude, float VehicleLongitude, float VehicleSpeed, int VehicleStopSeq, VehiclePositionStopStatus VehicleStopStatus)
         {
             FeedMessage feed = LoadVehiclePosition();
 
-            var timestamp = feed.Header.Timestamp;
             var position = feed.Entities[VehicleIndex];
 
-            GtfsVehiclePosition vehicle = GtfsVehiclePosition.Create(position, timestamp);
+            GtfsVehiclePosition vehicle = GtfsVehiclePosition.Create(position);
 
             Assert.Equal(VehicleId, vehicle.Id);
             Assert.Equal(VehicleLabel, vehicle.Label);
-            Assert.Equal(timestamp, vehicle.Timestamp);
+            Assert.Equal((ulong) VehicleTimestamp, vehicle.Timestamp);
             Assert.Equal(VehicleTripId, vehicle.TripId);
             Assert.Equal(VehicleLatitude, vehicle.Latitude);
             Assert.Equal(VehicleLongitude, vehicle.Longitude);

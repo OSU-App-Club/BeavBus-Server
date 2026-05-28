@@ -12,13 +12,17 @@ namespace CorvallisBus.Core.WebClients
     internal class GtfsData
     {
         public List<GtfsRoute> Routes { get; }
+
+        public List<GtfsStop> Stops { get; }
         public List<GtfsRouteSchedule> Schedules { get; }
 
         public GtfsData(
             List<GtfsRoute> routes,
+            List<GtfsStop> stops,
             List<GtfsRouteSchedule> schedules)
         {
             Routes = routes;
+            Stops = stops;
             Schedules = schedules;
         }
     }
@@ -40,6 +44,9 @@ namespace CorvallisBus.Core.WebClients
 
             var routesEntry = archive.GetEntry("routes.txt")
                 ?? throw new FileNotFoundException("The GTFS archive did not contain routes.txt.");
+            
+            var stopsEntry = archive.GetEntry("stops.txt")
+                ?? throw new FileNotFoundException("The GTFS archive did not contain stops.txt");
 
             var scheduleEntry = archive.GetEntry("stop_times.txt")
                 ?? throw new FileNotFoundException("The GTFS archive did not contain stop_times.txt.");
@@ -51,10 +58,12 @@ namespace CorvallisBus.Core.WebClients
                 ?? throw new FileNotFoundException("The GTFS archive did not contain calendar.txt.");
 
             var routes = ParseRouteCSV(routesEntry);
+            var stops = ParseStopCSV(stopsEntry);
             var schedules = ParseScheduleCSV(scheduleEntry, tripsEntry, calendarEntry);
 
             return new GtfsData(
                 routes: routes,
+                stops: stops,
                 schedules: schedules
             );
         }
@@ -68,6 +77,14 @@ namespace CorvallisBus.Core.WebClients
             var records = csv.GetRecords<GtfsRoute>();
             var routes = records.ToList();
             return routes;
+        }
+
+        private static List<GtfsStop> ParseStopCSV(ZipArchiveEntry entry)
+        {
+            using var csv = new CsvReader(new StreamReader(entry.Open()));
+            var records = csv.GetRecords<GtfsStop>();
+            var stops = records.ToList();
+            return stops;
         }
 
         private static List<GtfsRouteSchedule> ParseScheduleCSV(ZipArchiveEntry stopTimesTxt, ZipArchiveEntry tripsTxt, ZipArchiveEntry calendarTxt)

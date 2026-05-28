@@ -32,6 +32,12 @@ namespace CorvallisBus.Core.DataAccess
         /// <returns>Tuple of Service Alerts and timestamp</returns>
         Task<(List<ServiceAlert>, ulong)?> GetServiceAlertsAsync();
 
+        /// <summary>
+        /// Get Bus Positions from Repository
+        /// </summary>
+        /// <returns>List of Bus Positions</returns>
+        Task<List<BusPosition>?> GetBusPositionsAsync();
+
         void SetStaticData(BusStaticData staticData);
 
         void SetSchedule(ServerBusSchedule schedule);
@@ -43,5 +49,11 @@ namespace CorvallisBus.Core.DataAccess
         /// </summary>
         /// <param name="serviceAlerts">List of Service Alerts</param>
         void SetServiceAlerts((List<ServiceAlert>, ulong)? serviceAlerts);
+
+        /// <summary>
+        /// Save Bus Positions into Repository
+        /// </summary>
+        /// <param name="busPositions">List of Bus Positions</param>
+        void SetBusPositions(List<BusPosition>? busPositions);
     }
 }

@@ -48,20 +48,19 @@ namespace CorvallisBus.Core.Models.GtfsRealtime
         /// Create a new GTFS Vehicle Position from raw GTFS Realtime Data
         /// </summary>
         /// <param name="entity">A GTFS Realtime feed</param>
-        /// <param name="Timestamp">The timestamp of the @entity feed</param>
         /// <returns></returns>
-        public static GtfsVehiclePosition Create(FeedEntity entity, ulong Timestamp)
+        public static GtfsVehiclePosition Create(FeedEntity entity)
         {
             var vehicle_data = entity.Vehicle;
 
             var id = vehicle_data.Vehicle.Id;
             var vehicle_label = vehicle_data.Vehicle.Label;
 
-            var timestamp = Timestamp;
+            var timestamp = vehicle_data.Timestamp;
 
             var trip_id = vehicle_data.Trip.TripId;
 
-            var latitutde = vehicle_data.Position.Latitude;
+            var latitude = vehicle_data.Position.Latitude;
             var longitude = vehicle_data.Position.Longitude;
             var speed = vehicle_data.Position.Speed;
 
@@ -73,7 +72,7 @@ namespace CorvallisBus.Core.Models.GtfsRealtime
                 vehicle_label,
                 timestamp,
                 trip_id,
-                latitutde,
+                latitude,
                 longitude,
                 speed,
                 sequence,

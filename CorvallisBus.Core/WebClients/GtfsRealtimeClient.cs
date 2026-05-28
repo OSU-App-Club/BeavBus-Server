@@ -86,12 +86,12 @@ namespace CorvallisBus.Core.WebClients
 
         public async Task<List<GtfsVehiclePosition>?> GetVehiclePositions(DateTimeOffset? lastSavedTimestamp)
         {
-            Entity positions = await GetEntityAsync("vehiclepositions", lastSavedTimestamp ?? DateTimeOffset.UnixEpoch);
+            Entity positions = await GetEntityAsync("vehicleposition", lastSavedTimestamp ?? DateTimeOffset.UnixEpoch);
 
             if (positions is null) return null;
 
             List<GtfsVehiclePosition>? positionsList = positions?.Item1
-            .Select(p => GtfsVehiclePosition.Create(p, positions?.Item2 ?? (ulong)DateTimeOffset.UnixEpoch.ToUnixTimeSeconds()))
+            .Select(GtfsVehiclePosition.Create)
             .Where(pa => pa is not null)
             .Select(pa => pa!)
             .ToList();

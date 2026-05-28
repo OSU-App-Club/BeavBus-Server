@@ -177,6 +177,22 @@ namespace CorvallisBus.Controllers
         }
 
         /// <summary>
+        /// Retreives the current bus positions for all active buses
+        /// </summary>
+        /// <response code="200">A list with all bus positions</response>
+        [HttpGet("positions")]
+        [Produces("application/json")]
+        [ProducesResponseType<List<BusPosition>>(200)]
+        [ProducesResponseType(500)]
+        [Tags(["CTS"])]
+        public async Task<ActionResult> GetPositions(ITransitRepository _repository, ITransitClient _client)
+        {
+            var positions = await TransitManager.GetBusPositions(_repository, _client);
+            var positionsJson = JsonConvert.SerializeObject(positions);
+            return Content(positionsJson, "application/json");
+        }
+
+        /// <summary>
         /// Retreives any active Service Alerts
         /// </summary>
         /// <response code="200">A list with all active service alerts</response>
