@@ -87,7 +87,7 @@ namespace CorvallisBus.Core
             );
 
             var positions = await _client.GetVehiclePositions(pos_timestamp);
-            _repository.SetBusPositions(positions?.Select(BusPosition.Create).ToList());
+            _repository.SetBusPositions(positions);
         }
     }
 }

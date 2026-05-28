@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using CorvallisBus.Core.GtfsRealtimeGenerated;
 using CorvallisBus.Core.Models;
-using CorvallisBus.Core.Models.GtfsRealtime;
 using ProtoBuf;
 
 namespace CorvallisBus.Core.WebClients
@@ -84,14 +83,14 @@ namespace CorvallisBus.Core.WebClients
             return (alertsList, alerts?.Item2 ?? (ulong)DateTimeOffset.UnixEpoch.ToUnixTimeSeconds());
         }
 
-        public async Task<List<GtfsVehiclePosition>?> GetVehiclePositions(DateTimeOffset? lastSavedTimestamp)
+        public async Task<List<BusPosition>?> GetVehiclePositions(DateTimeOffset? lastSavedTimestamp)
         {
             Entity positions = await GetEntityAsync("vehicleposition", lastSavedTimestamp ?? DateTimeOffset.UnixEpoch);
 
             if (positions is null) return null;
 
-            List<GtfsVehiclePosition>? positionsList = positions?.Item1
-            .Select(GtfsVehiclePosition.Create)
+            List<BusPosition>? positionsList = positions?.Item1
+            .Select(BusPosition.Create)
             .Where(pa => pa is not null)
             .Select(pa => pa!)
             .ToList();

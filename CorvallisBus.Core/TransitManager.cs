@@ -212,11 +212,7 @@ namespace CorvallisBus
 
             if (positions is null)
             {
-                var vehicleData = await client.GetVehiclePositions(null);
-
-                positions = vehicleData?
-                    .Select(BusPosition.Create)
-                    .ToList();
+                positions = await client.GetVehiclePositions(null);
             }
 
             return positions ?? new List<BusPosition> { };

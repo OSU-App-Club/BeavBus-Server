@@ -1,6 +1,5 @@
 ﻿using CorvallisBus.Core.Models;
 using CorvallisBus.Core.Models.Connexionz;
-using CorvallisBus.Core.Models.GtfsRealtime;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -27,6 +26,6 @@ namespace CorvallisBus.Core.WebClients
         /// A List of GTFS-specific vehicle positions.
         /// It is likely this data will need to be reformatted in a TransitManager
         /// </returns>
-        Task<List<GtfsVehiclePosition>?> GetVehiclePositions(DateTimeOffset? lastSavedTimestamp);
+        Task<List<BusPosition>?> GetVehiclePositions(DateTimeOffset? lastSavedTimestamp);
     }
 }

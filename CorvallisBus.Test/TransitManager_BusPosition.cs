@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using CorvallisBus.Core.DataAccess;
 using CorvallisBus.Core.GtfsRealtimeGenerated;
 using CorvallisBus.Core.Models;
-using CorvallisBus.Core.Models.GtfsRealtime;
 using CorvallisBus.Core.WebClients;
 using Moq;
 using ProtoBuf;
@@ -32,8 +31,7 @@ namespace CorvallisBus.Test
         [Fact]
         public async Task BusPosition_FromRepository()
         {
-            GtfsVehiclePosition gtfsPos = GtfsVehiclePosition.Create(LoadVehiclePosition().Entities[0]);
-            BusPosition position = BusPosition.Create(gtfsPos);
+            BusPosition position = BusPosition.Create(LoadVehiclePosition().Entities[0]);
 
             var mockClient = new Mock<ITransitClient>();
             var mockRepo = new Mock<ITransitRepository>();
@@ -55,11 +53,11 @@ namespace CorvallisBus.Test
         [Fact]
         public async Task BusPosition_FromClient()
         {
-            GtfsVehiclePosition gtfsPos = GtfsVehiclePosition.Create(LoadVehiclePosition().Entities[0]);
+            BusPosition position = BusPosition.Create(LoadVehiclePosition().Entities[0]);
 
             var mockClient = new Mock<ITransitClient>();
             var mockRepo = new Mock<ITransitRepository>();
-            mockClient.Setup(client => client.GetVehiclePositions(null)).Returns(Task.FromResult<List<GtfsVehiclePosition>?>(new List<GtfsVehiclePosition> { gtfsPos }));
+            mockClient.Setup(client => client.GetVehiclePositions(null)).Returns(Task.FromResult<List<BusPosition>?>(new List<BusPosition> { position }));
             mockRepo.Setup(repo => repo.GetBusPositionsAsync()).Returns(
                 Task.FromResult<List<BusPosition>?>(null)
             );
@@ -78,8 +76,7 @@ namespace CorvallisBus.Test
         [Fact]
         public async Task BusPosition_ChangingData()
         {
-            GtfsVehiclePosition gtfsPos = GtfsVehiclePosition.Create(LoadVehiclePosition().Entities[0]);
-            BusPosition position = BusPosition.Create(gtfsPos);
+            BusPosition position = BusPosition.Create(LoadVehiclePosition().Entities[0]);
 
             List<BusPosition>? testRepositoryData = new List<BusPosition> { };
 

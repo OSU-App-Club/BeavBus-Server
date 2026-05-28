@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using CorvallisBus.Core.Models.GtfsRealtime;
+using CorvallisBus.Core.GtfsRealtimeGenerated;
 using Newtonsoft.Json;
 
 namespace CorvallisBus.Core.Models
@@ -39,15 +38,15 @@ namespace CorvallisBus.Core.Models
         /// </summary>
         /// <param name="gtfsBusPosition">a GTFS Bus Position record</param>
         /// <returns>a newly created BusPosition</returns>
-        public static BusPosition Create(GtfsVehiclePosition gtfsBusPosition)
+        public static BusPosition Create(FeedEntity gtfsBusPosition)
         {
             return new BusPosition(
-                gtfsBusPosition.Id,
-                gtfsBusPosition.Label,
-                gtfsBusPosition.Timestamp,
-                gtfsBusPosition.Latitude,
-                gtfsBusPosition.Longitude,
-                gtfsBusPosition.Speed
+                gtfsBusPosition.Vehicle.Vehicle.Id,
+                gtfsBusPosition.Vehicle.Vehicle.Label,
+                gtfsBusPosition.Vehicle.Timestamp,
+                gtfsBusPosition.Vehicle.Position.Latitude,
+                gtfsBusPosition.Vehicle.Position.Longitude,
+                gtfsBusPosition.Vehicle.Position.Speed
             );
         }
     }
