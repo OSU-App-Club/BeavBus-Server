@@ -1,4 +1,2 @@
 is_global = true
-
-# Ignore CS1591 (XML Comment) warnings
 dotnet_diagnostic.CS1591.severity = none
