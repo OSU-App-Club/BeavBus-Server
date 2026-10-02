@@ -83,7 +83,7 @@ namespace CorvallisBus.Core
             DateTimeOffset? pos_timestamp = null;
 
             if (busPositions is not null) pos_timestamp = DateTimeOffset.FromUnixTimeMilliseconds(
-                (long) (busPositions?.Select(p => p.Timestamp).Max() ?? 0)
+                (long) (busPositions?.Select(p => p.Timestamp).DefaultIfEmpty().Max() ?? 0)
             );
 
             var positions = await _client.GetVehiclePositions(pos_timestamp);
