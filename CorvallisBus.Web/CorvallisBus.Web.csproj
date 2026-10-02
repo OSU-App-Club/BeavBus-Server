@@ -22,10 +22,4 @@
     <ProjectReference Include="..\CorvallisBus.Core\CorvallisBus.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="apple-handoff-json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

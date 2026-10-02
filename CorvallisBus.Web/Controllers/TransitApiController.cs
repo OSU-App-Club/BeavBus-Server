@@ -17,6 +17,16 @@ using System.IO;
 
 namespace CorvallisBus.Controllers
 {
+    [Route("")]
+    public class RootController : Controller
+    {
+        [HttpGet]
+        public ActionResult Index()
+        {
+            return Redirect("https://www.osuappdev.club/");
+        }
+    }
+
     [ApiController]
     [Route("api")]
     public class TransitApiController : Controller
