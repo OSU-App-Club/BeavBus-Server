@@ -36,8 +36,22 @@ namespace CorvallisBus.Core.WebClients
 			return routes.Body
 				.GroupBy(r => r.RouteId())
 				.Select(r => r.First())
-				.Select(r => new BusRoute(r.RouteName, new List<int>(), r.Color, "", r.Polyline))
+				.Select(r => new BusRoute(r.RouteName, new List<int>(), r.Color, r.RouteId(), r.Polyline))
 				.ToList();
+		}
+
+		public async Task<List<OSUStop>?> GetStops(string routeId)
+		{
+			// FIXME: Force Specify America/Los_Angeles (Pacific) timezone
+			APIResponse<List<OSURoute>>? routes = await GetEntityAsync<List<OSURoute>>("routes", DateTime.Now);
+
+			if (routes is null) return null;
+			return routes.Body
+				.Where(r => r.RouteId() == routeId)
+				.GroupBy(r => r.RouteId())
+				.First()
+				.First()
+				.Stops;
 		}
 	}
 }
