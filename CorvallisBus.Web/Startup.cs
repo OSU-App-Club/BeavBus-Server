@@ -21,11 +21,9 @@ using CorvallisBus.Core.Models;
 
 namespace CorvallisBus.Web
 {
-    /// <summary></summary>
-    public class Startup
+    internal class Startup
     {
-        /// <summary>App Description for OpenAPI data</summary>
-        public const string AppDescription = @"
+        private const string AppDescription = @"
 The REST API that powers the BeavBus Corvallis Transit System data.
 
 Check it out on GitHub: [github.com/OSU-App-Club/BeavBus-Server](https://github.com/OSU-App-Club/BeavBus-Server)
@@ -42,18 +40,14 @@ See the official BeavBus Client: [github.com/OSU-App-Club/beavbus](https://githu
 We assume no liability for any missed buses.
 Buses may be erratic in their arrival behavior, and we cannot control that.";
 
-        /// <summary></summary>
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        /// <summary>App Configuration</summary>
         public IConfiguration Configuration { get; }
 
-        /// <summary>
-        /// This method gets called by the runtime. Use this method to add services to the container.
-        /// </summary>
+        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddOpenApi(options => {
@@ -104,9 +98,7 @@ Buses may be erratic in their arrival behavior, and we cannot control that.";
             services.AddHostedService<Worker>();
         }
 
-        /// <summary>
-        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        /// </summary>
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");

@@ -6,17 +6,13 @@ using Microsoft.Extensions.Hosting;
 
 namespace CorvallisBus.Web
 {
-    /// <summary></summary>
-    public class Program
+    internal class Program
     {
         static async Task Main(string[] args)
         {
             await BuildWebHost(args).RunAsync();
         }
 
-        /// <summary>
-        /// Build the ASP.NET Web Host using the Startup class
-        /// </summary>
         public static IHost BuildWebHost(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>

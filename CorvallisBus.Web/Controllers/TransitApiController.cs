@@ -19,15 +19,9 @@ using System.IO;
 
 namespace CorvallisBus.Controllers
 {
-    /// <summary>
-    /// Controller for non-API routes.
-    /// </summary>
     [Route("")]
-    public class RootController : Controller
+    internal class RootController : Controller
     {
-        /// <summary>
-        /// Index route. Currently redirects to App Club homepage.
-        /// </summary>
         [HttpGet]
         public ActionResult Index()
         {
@@ -49,10 +43,7 @@ namespace CorvallisBus.Controllers
         private readonly Func<DateTimeOffset> _getCurrentTime;
         private readonly BeaverBusManager _osuManager = new BeaverBusManager(new HttpClient());
 
-        /// <summary>
-        /// Create a new TransitApiController.
-        /// </summary>
-        public TransitApiController()
+        internal TransitApiController()
         {
             _getCurrentTime = () => TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.Now, _destinationTimeZoneId);
         }
