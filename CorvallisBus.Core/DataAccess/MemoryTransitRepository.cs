@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using CorvallisBus.Core.Models;
-using Newtonsoft.Json;
 using System.IO;
+using System.Threading.Tasks;
+
+using CorvallisBus.Core.Models;
+
 using Microsoft.Extensions.Hosting;
+
+using Newtonsoft.Json;
 
 namespace CorvallisBus.Core.DataAccess
 {

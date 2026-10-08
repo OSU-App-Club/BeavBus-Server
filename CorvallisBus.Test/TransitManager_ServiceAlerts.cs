@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+
 using CorvallisBus.Core.DataAccess;
 using CorvallisBus.Core.GtfsRealtimeGenerated;
 using CorvallisBus.Core.Models;
 using CorvallisBus.Core.WebClients;
+
 using Moq;
+
 using ProtoBuf;
+
 using Xunit;
 
 namespace CorvallisBus.Test

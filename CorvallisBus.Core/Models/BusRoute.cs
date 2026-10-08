@@ -1,9 +1,11 @@
-﻿using CorvallisBus.Core.Models.BeaverBus;
+﻿using System.Collections.Generic;
+using System.Linq;
+
+using CorvallisBus.Core.Models.BeaverBus;
 using CorvallisBus.Core.Models.Connexionz;
 using CorvallisBus.Core.Models.Gtfs;
+
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace CorvallisBus.Core.Models
 {
@@ -31,7 +33,7 @@ namespace CorvallisBus.Core.Models
     public record BusRoute(
         [property: JsonProperty("id")]
         string Id,
-    
+
         [property: JsonProperty("route")]
         string Route,
 

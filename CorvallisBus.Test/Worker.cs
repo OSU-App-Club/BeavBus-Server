@@ -2,13 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+
 using CorvallisBus.Core;
 using CorvallisBus.Core.DataAccess;
 using CorvallisBus.Core.Models;
 using CorvallisBus.Core.WebClients;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+
 using Moq;
+
 using Xunit;
 
 namespace CorvallisBus.Test
@@ -27,7 +31,7 @@ namespace CorvallisBus.Test
             var mockRepo = new Mock<ITransitRepository>();
             mockRepo.Setup(repo => repo.GetServiceAlertsAsync())
                 .Callback(() => WasThreadRan += 1)
-                .Returns(Task.FromResult<(List<ServiceAlert>, ulong)?>((new List<ServiceAlert> { }, (ulong) 0)));
+                .Returns(Task.FromResult<(List<ServiceAlert>, ulong)?>((new List<ServiceAlert> { }, (ulong)0)));
 
             var mockLogger = new Mock<ILogger<Worker>>();
 

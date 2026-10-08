@@ -1,12 +1,13 @@
-﻿using CorvallisBus.Core.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
+
+using CorvallisBus.Core.Models;
 using CorvallisBus.Core.Models.Connexionz;
 using CorvallisBus.Core.Models.Gtfs;
-using System.Diagnostics;
-using System.Net.Http;
 
 namespace CorvallisBus.Core.WebClients
 {

@@ -1,10 +1,14 @@
 using System;
 using System.IO;
 using System.Reflection;
+
 using CorvallisBus.Core.GtfsRealtimeGenerated;
 using CorvallisBus.Core.Models;
+
 using Newtonsoft.Json;
+
 using ProtoBuf;
+
 using Xunit;
 
 namespace CorvallisBus.Test
@@ -37,7 +41,7 @@ namespace CorvallisBus.Test
 
             Assert.Equal(VehicleId, vehicle.Id);
             Assert.Equal(VehicleLabel, vehicle.Label);
-            Assert.Equal((ulong) VehicleTimestamp, vehicle.Timestamp);
+            Assert.Equal((ulong)VehicleTimestamp, vehicle.Timestamp);
             Assert.Equal(VehicleLatitude, vehicle.Latitude);
             Assert.Equal(VehicleLongitude, vehicle.Longitude);
             Assert.Equal(VehicleSpeed, vehicle.Speed);

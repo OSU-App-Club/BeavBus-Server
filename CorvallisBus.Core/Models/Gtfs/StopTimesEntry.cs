@@ -1,8 +1,9 @@
-﻿using CsvHelper;
+﻿using System;
+
+using CsvHelper;
 using CsvHelper.Configuration;
 using CsvHelper.Configuration.Attributes;
 using CsvHelper.TypeConversion;
-using System;
 
 namespace CorvallisBus.Core.Models.Gtfs
 {

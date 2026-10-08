@@ -1,8 +1,11 @@
-using CorvallisBus.Core.GtfsRealtimeGenerated;
-using ProtoBuf;
 using System;
 using System.IO;
 using System.Reflection;
+
+using CorvallisBus.Core.GtfsRealtimeGenerated;
+
+using ProtoBuf;
+
 using Xunit;
 
 namespace CorvallisBus.Test
@@ -18,7 +21,7 @@ namespace CorvallisBus.Test
         {
             Stream? resource = Assembly.GetExecutingAssembly().GetManifestResourceStream(VEHICLE_POSITION_PROTOBUF_FILE) ?? throw new Exception();
             FeedMessage? feed = Serializer.Deserialize<FeedMessage>(resource);
-            
+
             return feed;
         }
 
@@ -31,7 +34,7 @@ namespace CorvallisBus.Test
 
             Assert.Equal("2.0", header.GtfsRealtimeVersion);
             Assert.Equal(FeedHeader.Incrementality.FullDataset, header.incrementality);
-            Assert.Equal((ulong) 1776316800, header.Timestamp);
+            Assert.Equal((ulong)1776316800, header.Timestamp);
         }
 
         [Theory]

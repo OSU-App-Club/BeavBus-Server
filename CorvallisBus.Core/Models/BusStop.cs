@@ -1,7 +1,9 @@
-﻿using CorvallisBus.Core.Models.Connexionz;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
+
+using CorvallisBus.Core.Models.Connexionz;
+
+using Newtonsoft.Json;
 
 namespace CorvallisBus.Core.Models
 {

@@ -1,11 +1,13 @@
-﻿using CorvallisBus.Core.Models.Gtfs;
-using CsvHelper;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
+
+using CorvallisBus.Core.Models.Gtfs;
+
+using CsvHelper;
 
 namespace CorvallisBus.Core.WebClients
 {
@@ -32,7 +34,7 @@ namespace CorvallisBus.Core.WebClients
     /// </summary>
     internal static class GtfsClient
     {
-        private static string GTFS_URL = "http://www.corvallistransit.com/rtt/public/utility/gtfs.aspx";
+        private static readonly string GTFS_URL = "http://www.corvallistransit.com/rtt/public/utility/gtfs.aspx";
         /// <summary>
         /// Downloads and interprets the ZIP file CTS uploads for GTFS compliance.
         /// This is primarily to get route colors and route schedules, and mapping of buses to routes/stops
@@ -44,7 +46,7 @@ namespace CorvallisBus.Core.WebClients
 
             var routesEntry = archive.GetEntry("routes.txt")
                 ?? throw new FileNotFoundException("The GTFS archive did not contain routes.txt.");
-            
+
             var stopsEntry = archive.GetEntry("stops.txt")
                 ?? throw new FileNotFoundException("The GTFS archive did not contain stops.txt");
 

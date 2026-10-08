@@ -6,8 +6,10 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+
 using CorvallisBus.Core.Models;
 using CorvallisBus.Core.WebClients;
+
 using Xunit;
 
 namespace CorvallisBus.Test
@@ -30,7 +32,7 @@ namespace CorvallisBus.Test
         /// <summary>
         /// The filename for the embedded ServiceAlert Protobuf Test File
         /// </summary>
-        static private string SERVICE_ALERT_PROTOBUF_FILE = "CorvallisBus.Test.Resources.ServiceAlert.pb";
+        private static readonly string SERVICE_ALERT_PROTOBUF_FILE = "CorvallisBus.Test.Resources.ServiceAlert.pb";
 
         private Stream LoadServiceAlert()
         {

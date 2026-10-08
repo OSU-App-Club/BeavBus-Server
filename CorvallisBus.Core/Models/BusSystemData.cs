@@ -4,12 +4,13 @@ global using ServerBusSchedule =
         int,
         System.Collections.Generic.IEnumerable<CorvallisBus.Core.Models.BusStopRouteSchedule>>;
 
-using CorvallisBus.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using CorvallisBus.Core.Models;
 
 namespace CorvallisBus.Core.Models
 {

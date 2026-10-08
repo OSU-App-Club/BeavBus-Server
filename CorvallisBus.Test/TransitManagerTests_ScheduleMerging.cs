@@ -1,13 +1,16 @@
 ﻿using System;
-using Xunit;
-using Moq;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
-using CorvallisBus.Core.Models;
+using System.Threading.Tasks;
+
 using CorvallisBus.Core.DataAccess;
+using CorvallisBus.Core.Models;
 using CorvallisBus.Core.Models.Connexionz;
 using CorvallisBus.Core.WebClients;
+
+using Moq;
+
+using Xunit;
 
 namespace CorvallisBus.Test
 {

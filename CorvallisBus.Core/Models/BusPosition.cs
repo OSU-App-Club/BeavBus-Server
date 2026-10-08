@@ -1,4 +1,5 @@
 using CorvallisBus.Core.GtfsRealtimeGenerated;
+
 using Newtonsoft.Json;
 
 namespace CorvallisBus.Core.Models

@@ -1,7 +1,9 @@
-using CorvallisBus.Core.GtfsRealtimeGenerated;
-using Newtonsoft.Json;
 using System;
 using System.Linq;
+
+using CorvallisBus.Core.GtfsRealtimeGenerated;
+
+using Newtonsoft.Json;
 
 namespace CorvallisBus.Core.Models
 {
@@ -44,7 +46,7 @@ namespace CorvallisBus.Core.Models
                 .Translations
                 .Where(t => t.Language == language_code)
                 .Select(t => t.Text);
-            
+
             if (header.Count() > 1)
                 throw new Exception("Entity '" + alert.Id + "' has more than one title for language '" + language_code + "'");
             if (description.Count() > 1)

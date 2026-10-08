@@ -1,8 +1,9 @@
-﻿using CorvallisBus.Core.Models;
-using CorvallisBus.Core.Models.Connexionz;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
+using CorvallisBus.Core.Models;
+using CorvallisBus.Core.Models.Connexionz;
 
 namespace CorvallisBus.Core.WebClients
 {

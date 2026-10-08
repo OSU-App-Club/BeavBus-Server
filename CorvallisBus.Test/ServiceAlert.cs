@@ -2,10 +2,14 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+
 using CorvallisBus.Core.GtfsRealtimeGenerated;
 using CorvallisBus.Core.Models;
+
 using Newtonsoft.Json;
+
 using ProtoBuf;
+
 using Xunit;
 
 namespace CorvallisBus.Test
@@ -22,7 +26,7 @@ namespace CorvallisBus.Test
 
             return ServiceAlert.Create(entity, entity.Alert.HeaderText.Translations.First().Language);
         }
-    
+
         [Fact]
         public void ServiceAlert_Generation()
         {
@@ -39,7 +43,7 @@ namespace CorvallisBus.Test
         {
             Stream? resource = Assembly.GetExecutingAssembly().GetManifestResourceStream(SERVICE_ALERT_PROTOBUF_FILE) ?? throw new Exception();
             FeedMessage? feed = Serializer.Deserialize<FeedMessage>(resource);
-            
+
             Assert.Equal(3, feed.Entities.Count);
 
             FeedEntity? entity = feed.Entities[1];
@@ -53,7 +57,7 @@ namespace CorvallisBus.Test
         {
             Stream? resource = Assembly.GetExecutingAssembly().GetManifestResourceStream(SERVICE_ALERT_PROTOBUF_FILE) ?? throw new Exception();
             FeedMessage? feed = Serializer.Deserialize<FeedMessage>(resource);
-            
+
             Assert.Equal(3, feed.Entities.Count);
 
             FeedEntity? entity = feed.Entities.Last();

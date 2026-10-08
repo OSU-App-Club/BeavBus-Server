@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Xml.Serialization;
-using System.Xml.Linq;
-using CorvallisBus.Core.Models.Connexionz;
-using CorvallisBus.Core.Models;
-using System.Threading.Tasks;
 using System.Net.Http;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+using System.Xml.Serialization;
+
+using CorvallisBus.Core.Models;
+using CorvallisBus.Core.Models.Connexionz;
 
 namespace CorvallisBus.Core.WebClients
 {

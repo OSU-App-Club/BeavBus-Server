@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+
 using CorvallisBus.Core.DataAccess;
 using CorvallisBus.Core.GtfsRealtimeGenerated;
 using CorvallisBus.Core.Models;
 using CorvallisBus.Core.WebClients;
+
 using Moq;
+
 using ProtoBuf;
+
 using Xunit;
 
 namespace CorvallisBus.Test
@@ -44,9 +48,9 @@ namespace CorvallisBus.Test
             Assert.Single(actual);
             Assert.Equal("1", actual[0].Id);
             Assert.Equal("749", actual[0].Label);
-            Assert.Equal((ulong) 1779327322, actual[0].Timestamp);
-            Assert.Equal((float) 44.5647659, actual[0].Latitude);
-            Assert.Equal((float) -123.263306, actual[0].Longitude);
+            Assert.Equal((ulong)1779327322, actual[0].Timestamp);
+            Assert.Equal((float)44.5647659, actual[0].Latitude);
+            Assert.Equal((float)-123.263306, actual[0].Longitude);
             Assert.Equal(0.0, actual[0].Speed);
         }
 
@@ -67,9 +71,9 @@ namespace CorvallisBus.Test
             Assert.Single(actual);
             Assert.Equal("1", actual[0].Id);
             Assert.Equal("749", actual[0].Label);
-            Assert.Equal((ulong) 1779327322, actual[0].Timestamp);
-            Assert.Equal((float) 44.5647659, actual[0].Latitude);
-            Assert.Equal((float) -123.263306, actual[0].Longitude);
+            Assert.Equal((ulong)1779327322, actual[0].Timestamp);
+            Assert.Equal((float)44.5647659, actual[0].Latitude);
+            Assert.Equal((float)-123.263306, actual[0].Longitude);
             Assert.Equal(0.0, actual[0].Speed);
         }
 
@@ -94,9 +98,9 @@ namespace CorvallisBus.Test
             Assert.Single(actual);
             Assert.Equal("1", actual[0].Id);
             Assert.Equal("749", actual[0].Label);
-            Assert.Equal((ulong) 1779327322, actual[0].Timestamp);
-            Assert.Equal((float) 44.5647659, actual[0].Latitude);
-            Assert.Equal((float) -123.263306, actual[0].Longitude);
+            Assert.Equal((ulong)1779327322, actual[0].Timestamp);
+            Assert.Equal((float)44.5647659, actual[0].Latitude);
+            Assert.Equal((float)-123.263306, actual[0].Longitude);
             Assert.Equal(0.0, actual[0].Speed);
         }
 

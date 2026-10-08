@@ -12,7 +12,7 @@ namespace CorvallisBus.Core.Models.Gtfs
 
         [Name("trip_id")]
         public int TripId { get; set; }
-        
+
         [Name("shape_id")]
         public int ShapeId { get; set; }
     }

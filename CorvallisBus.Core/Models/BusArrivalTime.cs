@@ -1,9 +1,10 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using Newtonsoft.Json;
 
 namespace CorvallisBus.Core.Models
 {
@@ -52,7 +53,7 @@ namespace CorvallisBus.Core.Models
         /// </summary>
         [JsonProperty("minutesFromNow")]
         public int MinutesFromNow { get; }
-        
+
         /// <summary>
         /// Whether the arrival is an estimate
         /// </summary>

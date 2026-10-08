@@ -1,5 +1,7 @@
-﻿using CorvallisBus.Core.WebClients;
-using System;
+﻿using System;
+
+using CorvallisBus.Core.WebClients;
+
 using Xunit;
 using Xunit.Abstractions;
 

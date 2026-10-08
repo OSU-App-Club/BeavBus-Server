@@ -1,23 +1,24 @@
-﻿using CorvallisBus.Core.DataAccess;
-using CorvallisBus.Core.Models;
-using CorvallisBus.Core.Models.Connexionz;
-using CorvallisBus.Core.WebClients;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using CorvallisBus.Core.DataAccess;
+using CorvallisBus.Core.Models;
+using CorvallisBus.Core.Models.Connexionz;
+using CorvallisBus.Core.WebClients;
+
+using Newtonsoft.Json;
+
 namespace CorvallisBus
 {
-    // Maps a stop ID to a dictionary that maps a route number to a list of arrival times.
-    // Intended for client consumption.
-    using ClientBusSchedule = Dictionary<int, Dictionary<string, List<BusArrivalTime>>>;
-
     // Maps a 5-digit stop ID to a dictionary that maps a route number to an arrival estimate in minutes.
     // Exists to provide some compile-time semantics to differ between schedules and estimates.
     using BusArrivalEstimates = Dictionary<int, Dictionary<string, List<int>>>;
+    // Maps a stop ID to a dictionary that maps a route number to a list of arrival times.
+    // Intended for client consumption.
+    using ClientBusSchedule = Dictionary<int, Dictionary<string, List<BusArrivalTime>>>;
 
     /// <summary>
     /// Class for managing interactions between CTS clients and the memory repository
