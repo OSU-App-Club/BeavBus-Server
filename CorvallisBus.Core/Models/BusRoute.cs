@@ -1,4 +1,5 @@
-﻿using CorvallisBus.Core.Models.Connexionz;
+﻿using CorvallisBus.Core.Models.BeaverBus;
+using CorvallisBus.Core.Models.Connexionz;
 using CorvallisBus.Core.Models.Gtfs;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -7,29 +8,35 @@ using System.Linq;
 namespace CorvallisBus.Core.Models
 {
     /// <summary>
-    /// Represents a CTS Route.
+    /// Represents a Bus Route for any provider.
     /// </summary>
-    /// <param name="RouteNo">
-    /// Route Number (e.g. 1, 2, NON, CVA, etc).
+    /// <param name="Id">
+    /// A unique identifier for this route, to use in API requests.
     /// </param>
-    /// <param name="Path">
-    /// List of stop ids on this route, in the order the bus reaches them.
+    /// <param name="Route">
+    /// Route Number (e.g. 1, 2, PK1, Central Route, etc).
+    /// </param>
+    /// <param name="Stops">
+    /// List of Stop IDs (see /stops) on this route, in the order the bus reaches them.
     /// </param>
     /// <param name="Color">
-    /// CTS-defined color for this route.
+    /// Defined color for this route. Should be used for coloring UI elements related to this route.
     /// </param>
     /// <param name="Url">
-    /// URL to the CTS web page for this route.
+    /// URL to the schedule page for this route.
     /// </param>
     /// <param name="Polyline">
-    /// Google maps polyline for this route.
+    /// Google Maps-compatible polyline for this route.
     /// </param>
     public record BusRoute(
-        [property: JsonProperty("routeNo")]
-        string RouteNo,
+        [property: JsonProperty("id")]
+        string Id,
+    
+        [property: JsonProperty("route")]
+        string Route,
 
-        [property: JsonProperty("path")]
-        List<int> Path,
+        [property: JsonProperty("stops")]
+        List<int> Stops,
 
         [property: JsonProperty("color")]
         string Color,
@@ -57,7 +64,19 @@ namespace CorvallisBus.Core.Models
             };
             var url = "https://www.corvallisoregon.gov/cts/page/cts-route-" + routeUrlSuffix;
 
-            return new BusRoute(routeNo, path, googleRoute.Color, url, connectionzRoute.Polyline);
+            return new BusRoute(routeNo, routeNo, path, googleRoute.Color, url, connectionzRoute.Polyline);
+        }
+
+        internal static BusRoute Create(BeaverBusRoute beaverBusRoute)
+        {
+            return new BusRoute(
+                beaverBusRoute.RouteId(), // Id
+                beaverBusRoute.Route,     // Route
+                new List<int>(),          // Stops
+                beaverBusRoute.Color,     // Color
+                "https://transportation.oregonstate.edu/beaver-bus-schedules",  // URL
+                beaverBusRoute.Polyline   // Polyline
+            );
         }
     }
 }

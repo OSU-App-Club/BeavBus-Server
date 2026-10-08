@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Globalization;
 using System.Threading.Tasks;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.OpenApi;
+using Microsoft.AspNetCore.Http.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -14,6 +17,7 @@ using Microsoft.OpenApi;
 using CorvallisBus.Core.WebClients;
 using CorvallisBus.Core.DataAccess;
 using CorvallisBus.Core;
+using CorvallisBus.Core.Models;
 
 namespace CorvallisBus.Web
 {
@@ -67,6 +71,26 @@ Buses may be erratic in their arrival behavior, and we cannot control that.";
                     return Task.CompletedTask;
                 });
             });
+            services.Configure<JsonOptions>(options =>
+            {
+                options.SerializerOptions.Converters.Add(
+                    new JsonStringEnumConverter<TransitSystem>());
+                options.SerializerOptions.DefaultIgnoreCondition =
+                    JsonIgnoreCondition.WhenWritingNull;
+                options.SerializerOptions.PropertyNamingPolicy =
+                    JsonNamingPolicy.CamelCase;
+            
+            });
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Converters.Add(
+                        new JsonStringEnumConverter<TransitSystem>());
+                    options.JsonSerializerOptions.DefaultIgnoreCondition =
+                        JsonIgnoreCondition.WhenWritingNull;
+                    options.JsonSerializerOptions.PropertyNamingPolicy =
+                        JsonNamingPolicy.CamelCase;
+                });
             services.AddMvc(option => option.EnableEndpointRouting = false);
 
             services.AddSingleton<ITransitRepository, MemoryTransitRepository>();

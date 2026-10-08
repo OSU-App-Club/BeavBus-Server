@@ -29,7 +29,7 @@ namespace CorvallisBus.Core.WebClients
             var stops = CreateStops(connexionzPlatforms, connexionzRoutes);
 
             var staticData = new BusStaticData(
-                Routes: routes.ToDictionary(r => r.RouteNo),
+                Routes: routes.ToDictionary(r => r.Route),
                 Stops: stops.ToDictionary(s => s.Id)
             );
 
@@ -87,11 +87,11 @@ namespace CorvallisBus.Core.WebClients
             // Validate schedule for each route
             foreach (var route in data.StaticData.Routes.Values)
             {
-                var firstStopId = route.Path[0];
-                var firstStopSchedules = data.Schedule[firstStopId].FirstOrDefault(rs => rs.RouteNo == route.RouteNo);
+                var firstStopId = route.Stops[0];
+                var firstStopSchedules = data.Schedule[firstStopId].FirstOrDefault(rs => rs.RouteNo == route.Route);
                 if (firstStopSchedules == null)
                 {
-                    errors.Add($"Route {route.RouteNo} has no schedule for stop ID {firstStopId}");
+                    errors.Add($"Route {route.Route} has no schedule for stop ID {firstStopId}");
                     continue;
                 }
 
@@ -102,35 +102,35 @@ namespace CorvallisBus.Core.WebClients
                         // get the i'th arrival for each stop in the path, ensure monotonically increasing
                         var currentArrivalTime = TimeSpan.MinValue;
 
-                        for (var stopIdx = 0; stopIdx < route.Path.Count; stopIdx++)
+                        for (var stopIdx = 0; stopIdx < route.Stops.Count; stopIdx++)
                         {
-                            var stopId = route.Path[stopIdx];
+                            var stopId = route.Stops[stopIdx];
                             if (stopId == 0)
                             {
-                                errors.Add($"Route {route.RouteNo} has a missing stop in its path at index {stopIdx}");
+                                errors.Add($"Route {route.Route} has a missing stop in its path at index {stopIdx}");
                                 continue;
                             }
                             else if (stopId < 1000)
                             {
-                                errors.Add($"Route {route.RouteNo} is using platform tag {stopId} as an ID because it has no stop ID");
+                                errors.Add($"Route {route.Route} is using platform tag {stopId} as an ID because it has no stop ID");
                                 continue;
                             }
                             else if (!data.Schedule.ContainsKey(stopId))
                             {
-                                errors.Add($"Route {route.RouteNo} is using stop ID {stopId} which has no schedule");
+                                errors.Add($"Route {route.Route} is using stop ID {stopId} which has no schedule");
                                 continue;
                             }
 
                             var routeStopDayArrivalTimes = data
                                 .Schedule[stopId]
-                                .Single(rs => rs.RouteNo == route.RouteNo)
+                                .Single(rs => rs.RouteNo == route.Route)
                                 .DaySchedules
                                 .Single(ds => ds.Days == firstStopDaySchedule.Days)
                                 .Times;
 
                             if (routeStopDayArrivalTimes.Count != firstStopDaySchedule.Times.Count)
                             {
-                                errors.Add($"Warning: {route.RouteNo} does not have the same number of arrivals at all stops. Stop {stopId} has {routeStopDayArrivalTimes.Count} arrivals while stop ID {firstStopId} has {firstStopDaySchedule.Times.Count} arrivals.");
+                                errors.Add($"Warning: {route.Route} does not have the same number of arrivals at all stops. Stop {stopId} has {routeStopDayArrivalTimes.Count} arrivals while stop ID {firstStopId} has {firstStopDaySchedule.Times.Count} arrivals.");
                                 continue;
                             }
 
@@ -138,7 +138,7 @@ namespace CorvallisBus.Core.WebClients
                             if (nextArrivalTime <= currentArrivalTime)
                             {
                                 Debug.Assert(stopIdx > 0);
-                                errors.Add($"Route {route.RouteNo} has a schedule discrepancy across stops {route.Path[stopIdx - 1]} and {route.Path[stopIdx]}. Arrival time {currentArrivalTime} is followed by {nextArrivalTime}");
+                                errors.Add($"Route {route.Route} has a schedule discrepancy across stops {route.Stops[stopIdx - 1]} and {route.Stops[stopIdx]}. Arrival time {currentArrivalTime} is followed by {nextArrivalTime}");
                             }
 
                             currentArrivalTime = nextArrivalTime;

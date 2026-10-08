@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
+using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using CorvallisBus.Core;
 using CorvallisBus.Core.DataAccess;
 using CorvallisBus.Core.WebClients;
 using CorvallisBus.Core.Models;
@@ -17,9 +19,15 @@ using System.IO;
 
 namespace CorvallisBus.Controllers
 {
+    /// <summary>
+    /// Controller for non-API routes.
+    /// </summary>
     [Route("")]
     public class RootController : Controller
     {
+        /// <summary>
+        /// Index route. Currently redirects to App Club homepage.
+        /// </summary>
         [HttpGet]
         public ActionResult Index()
         {
@@ -27,6 +35,9 @@ namespace CorvallisBus.Controllers
         }
     }
 
+    /// <summary>
+    /// Controller for API routes.
+    /// </summary>
     [ApiController]
     [Route("api")]
     public class TransitApiController : Controller
@@ -36,8 +47,12 @@ namespace CorvallisBus.Controllers
                 : "America/Los_Angeles";
 
         private readonly Func<DateTimeOffset> _getCurrentTime;
+        private readonly BeaverBusManager _osuManager = new BeaverBusManager(new HttpClient());
 
-        public TransitApiController(IWebHostEnvironment env)
+        /// <summary>
+        /// Create a new TransitApiController.
+        /// </summary>
+        public TransitApiController()
         {
             _getCurrentTime = () => TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.Now, _destinationTimeZoneId);
         }
@@ -50,6 +65,65 @@ namespace CorvallisBus.Controllers
         public ActionResult Index()
         {
             return Redirect("/swagger/");
+        }
+
+        private ITransitManager GetManager(TransitSystem system)
+        {
+            switch (system)
+            {
+                case TransitSystem.OSU:
+                default:
+                    return _osuManager;
+            }
+        }
+
+        /// <summary>
+        /// Gets static route data for a transit system.
+        /// </summary>
+        /// <remarks>
+        /// Gets static route data for a transit system. This contains all useful metadata about what routes exist, but does not contain any scheduling
+        /// or stop data.
+        /// 
+        /// This data should be considered accurate for 24 hours. Caching it on the client side is encouraged.
+        /// </remarks>
+        /// <param name="system">The transit system to fetch routes for.</param>
+        /// <param name="_repository"></param>
+        /// <response code="200">The transit system route data.</response>
+        /// <response code="400">An invalid transit system was specified.</response>
+        [HttpGet("routes")]
+        [Produces("application/json")]
+        [ProducesResponseType<List<BusRoute>>(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        [Tags(["CTS", "OSU"])]
+        public async Task<ActionResult> GetRoutes([FromQuery] List<TransitSystem> system, ITransitRepository _repository)
+        {
+            var routes = new List<BusRoute>();
+
+            if (!system.Any()) system = [TransitSystem.OSU, TransitSystem.CTS];
+
+            foreach (TransitSystem sys in system)
+            {
+                ITransitManager mgr = GetManager(sys);
+                try {
+                    var sysRoutes = await mgr.GetRoutes(_repository);
+                    if (sysRoutes is not null)
+                        routes.AddRange(sysRoutes);
+                }
+                catch {
+                    return StatusCode(500);
+                }
+            };
+
+            try
+            {
+                var json = JsonConvert.SerializeObject(routes.GroupBy(r => r.Id).Select(r => r.FirstOrDefault()).ToList());
+                return Content(json, "application/json");
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
         }
 
         /// <summary>
