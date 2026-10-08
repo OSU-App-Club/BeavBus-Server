@@ -1,21 +1,23 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Http;
+using System.Linq;
 using System.Net.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+
 using CorvallisBus.Core;
 using CorvallisBus.Core.DataAccess;
-using CorvallisBus.Core.WebClients;
 using CorvallisBus.Core.Models;
-using Microsoft.AspNetCore.Hosting;
-using System.Runtime.InteropServices;
+using CorvallisBus.Core.WebClients;
+
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+
+using Newtonsoft.Json;
+
 using SendGrid;
 using SendGrid.Helpers.Mail;
-using System.IO;
 
 namespace CorvallisBus.Controllers
 {
@@ -96,15 +98,18 @@ namespace CorvallisBus.Controllers
             foreach (TransitSystem sys in system)
             {
                 ITransitManager mgr = GetManager(sys);
-                try {
+                try
+                {
                     var sysRoutes = await mgr.GetRoutes(_repository);
                     if (sysRoutes is not null)
                         routes.AddRange(sysRoutes);
                 }
-                catch {
+                catch
+                {
                     return StatusCode(500);
                 }
-            };
+            }
+            ;
 
             try
             {
@@ -157,7 +162,7 @@ namespace CorvallisBus.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
         [Tags(["CTS"])]
-        public async Task<ActionResult> GetETAs([FromQuery, BindRequired]List<int> stopIds, ITransitRepository _repository, ITransitClient _client)
+        public async Task<ActionResult> GetETAs([FromQuery, BindRequired] List<int> stopIds, ITransitRepository _repository, ITransitClient _client)
         {
             if (stopIds == null || stopIds.Count == 0)
             {
@@ -201,7 +206,7 @@ namespace CorvallisBus.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
         [Tags(["CTS"])]
-        public async Task<ActionResult> GetSchedule([FromQuery, BindRequired]List<int> stopIds, ITransitRepository _repository, ITransitClient _client)
+        public async Task<ActionResult> GetSchedule([FromQuery, BindRequired] List<int> stopIds, ITransitRepository _repository, ITransitClient _client)
         {
             if (stopIds == null || stopIds.Count == 0)
             {
@@ -239,7 +244,7 @@ namespace CorvallisBus.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
         [Tags(["CTS"])]
-        public async Task<ActionResult> GetArrivalsSummary([FromQuery, BindRequired]List<int> stopIds, ITransitRepository _repository, ITransitClient _client)
+        public async Task<ActionResult> GetArrivalsSummary([FromQuery, BindRequired] List<int> stopIds, ITransitRepository _repository, ITransitClient _client)
         {
             if (stopIds == null || stopIds.Count == 0)
             {
