@@ -19,6 +19,9 @@ namespace CorvallisBus
     // Exists to provide some compile-time semantics to differ between schedules and estimates.
     using BusArrivalEstimates = Dictionary<int, Dictionary<string, List<int>>>;
 
+    /// <summary>
+    /// Class for managing interactions between CTS clients and the memory repository
+    /// </summary>
     public static class TransitManager
     {
         /// <summary>

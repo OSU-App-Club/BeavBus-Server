@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace CorvallisBus.Core.Models
 {
+    /// <summary></summary>
     public record RouteArrivalsSummary(
         [property: JsonProperty("routeName")]
         string RouteName,
@@ -20,6 +21,7 @@ namespace CorvallisBus.Core.Models
         string ScheduleSummary)
     {
 
+        /// <summary></summary>
         public static RouteArrivalsSummary Create(string routeName, List<BusArrivalTime> routeArrivalTimes, DateTimeOffset currentTime)
         {
             return new RouteArrivalsSummary(routeName,
@@ -27,6 +29,7 @@ namespace CorvallisBus.Core.Models
                 ToScheduleSummary(routeArrivalTimes, currentTime));
         }
 
+        /// <summary></summary>
         public static string ToEstimateSummary(List<BusArrivalTime> arrivals, DateTimeOffset currentTime)
         {
             switch (arrivals.Count)
@@ -68,6 +71,7 @@ namespace CorvallisBus.Core.Models
             }
         }
 
+        /// <summary></summary>
         public static string ToScheduleSummary(List<BusArrivalTime> arrivals, DateTimeOffset currentTime)
         {
             if (arrivals.Count <= 2)

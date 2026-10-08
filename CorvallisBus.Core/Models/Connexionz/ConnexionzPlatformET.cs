@@ -11,6 +11,7 @@ namespace CorvallisBus.Core.Models.Connexionz
         int PlatformTag,
         List<ConnexionzRouteET>? RouteEstimatedArrivals)
     {
+        /// <summary></summary>
         public ConnexionzPlatformET(RoutePositionPlatform routePositionPlatform)
             : this(
                 int.Parse(routePositionPlatform.PlatformTag),

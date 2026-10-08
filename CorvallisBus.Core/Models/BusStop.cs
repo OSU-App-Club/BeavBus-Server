@@ -46,6 +46,7 @@ namespace CorvallisBus.Core.Models
         [property: JsonProperty("routeNames")]
         List<string> RouteNames)
     {
+        /// <summary></summary>
         public static string ToDirection(double bearing)
         {
             if (!(bearing >= 0 && bearing <= 360))
@@ -71,6 +72,7 @@ namespace CorvallisBus.Core.Models
                 return string.Empty;
         }
 
+        /// <summary></summary>
         public static BusStop Create(ConnexionzPlatform platform, List<string> routeNames, bool appendDirection)
         {
             return new BusStop(

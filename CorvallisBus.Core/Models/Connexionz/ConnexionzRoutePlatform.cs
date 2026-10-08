@@ -8,12 +8,14 @@ namespace CorvallisBus.Core.Models.Connexionz
     /// </summary>
     public struct ConnexionzRoutePlatform
     {
+        /// <summary></summary>
         public ConnexionzRoutePlatform(RoutePatternProjectRouteDestinationPatternPlatform platform)
         {
             PlatformId = int.Parse(platform.PlatformNo is null ? platform.PlatformTag : platform.PlatformNo);
             IsScheduleAdherancePoint = bool.TryParse(platform.ScheduleAdheranceTimepoint, out var result) && result;
         }
 
+        /// <summary></summary>
         public ConnexionzRoutePlatform(
             int platformId,
             bool isScheduleAdherancePoint)
@@ -43,11 +45,14 @@ namespace CorvallisBus.Core.Models.Connexionz
     {
         private ConnexionzRoutePlatformComparer() { }
 
+        /// <summary></summary>
         public static ConnexionzRoutePlatformComparer Instance { get; } = new ConnexionzRoutePlatformComparer();
 
+        /// <summary></summary>
         public bool Equals(ConnexionzRoutePlatform x, ConnexionzRoutePlatform y) =>
             x.PlatformId == y.PlatformId;
 
+        /// <summary></summary>
         public int GetHashCode(ConnexionzRoutePlatform obj) =>
             obj.GetHashCode();
     }

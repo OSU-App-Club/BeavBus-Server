@@ -21,33 +21,39 @@ using CorvallisBus.Core.Models;
 
 namespace CorvallisBus.Web
 {
+    /// <summary></summary>
     public class Startup
     {
+        /// <summary>App Description for OpenAPI data</summary>
         public const string AppDescription = @"
 The REST API that powers the BeavBus Corvallis Transit System data.
 
-Check it out on GitHub: https://github.com/OSU-App-Club/BeavBus-Server
+Check it out on GitHub: [github.com/OSU-App-Club/BeavBus-Server](https://github.com/OSU-App-Club/BeavBus-Server)
 
 ### Summary
 
 The Corvallis Bus REST API provides a convenient way to get real-time information about the free buses in Corvallis.
 Data from CTS is merged with data from Google Transit, with some convenient projections applied, and mapped into some easily-digestable JSON for different use cases.
 
-See the official BeavBus Client: https://github.com/OSU-App-Club/beavbus
+See the official BeavBus Client: [github.com/OSU-App-Club/beavbus](https://github.com/OSU-App-Club/beavbus)
 
 ### Disclaimer
 
 We assume no liability for any missed buses.
 Buses may be erratic in their arrival behavior, and we cannot control that.";
 
+        /// <summary></summary>
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
+        /// <summary>App Configuration</summary>
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container.
+        /// </summary>
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddOpenApi(options => {
@@ -98,7 +104,9 @@ Buses may be erratic in their arrival behavior, and we cannot control that.";
             services.AddHostedService<Worker>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// </summary>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");

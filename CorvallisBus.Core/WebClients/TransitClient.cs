@@ -19,6 +19,7 @@ namespace CorvallisBus.Core.WebClients
         private readonly HttpClient _client = client;
         private GtfsRealtimeClient gtfsRealtimeClient => new GtfsRealtimeClient(_client);
 
+        /// <inheritdoc/>
         public (BusSystemData data, List<string> errors) LoadTransitData()
         {
             var connexionzPlatforms = ConnexionzClient.LoadPlatforms();
@@ -46,6 +47,9 @@ namespace CorvallisBus.Core.WebClients
             return (transitData, errors);
         }
 
+        /// <summary>
+        /// Validate system data to ensure correctness.
+        /// </summary>
         public static List<string> ValidateTransitData(BusSystemData data)
         {
             var errors = new List<string>();
@@ -179,6 +183,7 @@ namespace CorvallisBus.Core.WebClients
             return routes.Select(r => BusRoute.Create(r, googleRoutesDict)).ToList();
         }
 
+        /// <inheritdoc/>
         public async Task<ConnexionzPlatformET?> GetEta(int platformTag) => await ConnexionzClient.GetPlatformEta(platformTag);
 
         /// <summary>

@@ -17,6 +17,10 @@ namespace CorvallisBus.Core.Models.Connexionz
     /// The angle in degrees between this bus stop and the road. This can be treated as
     /// the angle between the positive X axis and the direction of travel for buses at this stop.
     /// </param>
+    /// <param name="Long"></param>
+    /// <param name="Lat"></param>
+    /// <param name="CompactName"></param>
+    /// <param name="Name"></param>
     public record ConnexionzPlatform(
         int PlatformTag,
         int PlatformNo,
@@ -26,6 +30,7 @@ namespace CorvallisBus.Core.Models.Connexionz
         double Lat,
         double Long)
     {
+        /// <summary></summary>
         public static ConnexionzPlatform Create(XElement platform)
         {
             var platformNoAttr = platform.Attribute("PlatformNo")!;

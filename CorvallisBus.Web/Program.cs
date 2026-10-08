@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace CorvallisBus.Web
 {
+    /// <summary></summary>
     public class Program
     {
         static async Task Main(string[] args)
@@ -18,6 +14,9 @@ namespace CorvallisBus.Web
             await BuildWebHost(args).RunAsync();
         }
 
+        /// <summary>
+        /// Build the ASP.NET Web Host using the Startup class
+        /// </summary>
         public static IHost BuildWebHost(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>

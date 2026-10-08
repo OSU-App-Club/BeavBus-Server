@@ -6,9 +6,19 @@ using System.Threading.Tasks;
 
 namespace CorvallisBus.Core.WebClients
 {
+    /// <summary>
+    /// Interface for transit clients.
+    /// </summary>
     public interface ITransitClient
     {
+        /// <summary>
+        /// Loads transit data from Connexionz and combines it with Google Transit.
+        /// </summary>
         (BusSystemData data, List<string> errors) LoadTransitData();
+
+        /// <summary>
+        /// Get an ETA for a stop
+        /// </summary>
         Task<ConnexionzPlatformET?> GetEta(int platformTag);
 
         /// <summary>

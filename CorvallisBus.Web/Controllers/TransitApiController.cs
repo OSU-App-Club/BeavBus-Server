@@ -134,6 +134,7 @@ namespace CorvallisBus.Controllers
         /// 
         /// This data should be considered accurate for 24 hours. Caching it on the client side is encouraged.
         /// </remarks>
+        /// <param name="_repository"></param>
         /// <response code="200">The CTS route and stop data.</response>
         [HttpGet("static")]
         [Produces("application/json")]
@@ -155,6 +156,8 @@ namespace CorvallisBus.Controllers
         /// For example, `"6": [1, 21]` means that Route 6 is arriving at the given stop in 1 minute, and again in 21 minutes. ETAs are limited to 30 minutes in the future by the city.
         /// </remarks>
         /// <param name="stopIds" type="array">Stop IDs to get ETAs for</param>
+        /// <param name="_repository"></param>
+        /// <param name="_client"></param>
         /// <response code="200">The stop ETAs.</response>
         /// <response code="400">An error occured validating the Stop IDs</response>
         [HttpGet("eta")]
@@ -197,6 +200,8 @@ namespace CorvallisBus.Controllers
         /// For the time being, it's recommended to use the endpoints which interpret these times and produce user-friendly descriptions for you, such as `/arrivals-summary`.
         /// </remarks>
         /// <param name="stopIds" type="array">Stop IDs to get schedules for</param>
+        /// <param name="_repository"></param>
+        /// <param name="_client"></param>
         /// <response code="200">A nested dictionary which groups the arrival times first by stop, then by route name.</response>
         /// <response code="400">An error occured validating the Stop IDs</response>
         [HttpGet("schedule")]
@@ -233,6 +238,8 @@ namespace CorvallisBus.Controllers
         /// The server tries to determine if each route arrives at a given stop "pretty much" hourly or half-hourly. Most routes arrive hourly, with a 10-minute break in the middle of the day. Thus if all the scheduled times left in the day are between 50-70 minutes from each other, it's considered to be an hourly schedule. Similarly with all being 20-40 minutes apart to be considered half-hourly.
         /// </remarks>
         /// <param name="stopIds" type="array">Stop IDs to get arrivals summary for</param>
+        /// <param name="_repository"></param>
+        /// <param name="_client"></param>
         /// <response code="200">A dictionary with the stop IDs as the key and the summaries array as the value.</response>
         /// <response code="400">An error occured validating the Stop IDs</response>
         [HttpGet("arrivals-summary")]
@@ -264,6 +271,8 @@ namespace CorvallisBus.Controllers
         /// Retreives the current bus positions for all active buses
         /// </summary>
         /// <response code="200">A list with all bus positions</response>
+        /// <param name="_repository"></param>
+        /// <param name="_client"></param>
         [HttpGet("positions")]
         [Produces("application/json")]
         [ProducesResponseType<List<BusPosition>>(200)]
@@ -280,6 +289,8 @@ namespace CorvallisBus.Controllers
         /// Retreives any active Service Alerts
         /// </summary>
         /// <response code="200">A list with all active service alerts</response>
+        /// <param name="_repository"></param>
+        /// <param name="_client"></param>
         [HttpGet("service-alerts")]
         [Produces("application/json")]
         [ProducesResponseType<List<ServiceAlert>>(200)]
@@ -295,6 +306,8 @@ namespace CorvallisBus.Controllers
         /// <summary>
         /// Performs a first-time setup and import of static data.
         /// </summary>
+        /// <param name="_repository"></param>
+        /// <param name="_client"></param>
         [HttpPost("job/init")]
         [ApiExplorerSettings(IgnoreApi = true)] // Private API
         public ActionResult Init(ITransitRepository _repository, ITransitClient _client)

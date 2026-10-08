@@ -19,6 +19,8 @@ namespace CorvallisBus.Core.Models
     /// <param name="PlatformIdToPlatformTag">
     /// Maps a platform number (5-digit number shown on real bus stop signs) to a platform tag (3-digit internal Connexionz identifier).
     /// </param>
+    /// <param name="StaticData"></param>
+    /// <param name="Schedule"></param>
     public record BusSystemData(
         BusStaticData StaticData,
         ServerBusSchedule Schedule,

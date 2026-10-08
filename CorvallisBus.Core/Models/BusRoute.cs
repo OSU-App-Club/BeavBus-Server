@@ -47,7 +47,7 @@ namespace CorvallisBus.Core.Models
         [property: JsonProperty("polyline")]
         string Polyline)
     {
-        public static BusRoute Create(ConnexionzRoute connectionzRoute, Dictionary<string, GtfsRoute> googleRoutes)
+        internal static BusRoute Create(ConnexionzRoute connectionzRoute, Dictionary<string, GtfsRoute> googleRoutes)
         {
             var routeNo = connectionzRoute.RouteNo;
             var googleRoute = googleRoutes[routeNo];

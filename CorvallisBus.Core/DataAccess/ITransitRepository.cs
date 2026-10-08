@@ -11,6 +11,9 @@ namespace CorvallisBus.Core.DataAccess
     /// </summary>
     public interface ITransitRepository
     {
+        /// <summary>
+        /// The filesystem path for static data.
+        /// </summary>
         string StaticDataPath { get; }
 
         /// <summary>
@@ -20,10 +23,19 @@ namespace CorvallisBus.Core.DataAccess
         /// </summary>
         Task<string> GetSerializedStaticDataAsync();
 
+        /// <summary>
+        /// Returns route and stop information intended for direct client consumption.
+        /// </summary>
         Task<BusStaticData> GetStaticDataAsync();
 
+        /// <summary>
+        /// Get saved platform tags from repository
+        /// </summary>
         Task<Dictionary<int, int>> GetPlatformTagsAsync();
 
+        /// <summary>
+        /// Get saved schedule data from repository
+        /// </summary>
         Task<ServerBusSchedule> GetScheduleAsync();
 
         /// <summary>
@@ -38,10 +50,19 @@ namespace CorvallisBus.Core.DataAccess
         /// <returns>List of Bus Positions</returns>
         Task<List<BusPosition>?> GetBusPositionsAsync();
 
+        /// <summary>
+        /// Set static data for repository
+        /// </summary>
         void SetStaticData(BusStaticData staticData);
 
+        /// <summary>
+        /// Set schedule for repository
+        /// </summary>
         void SetSchedule(ServerBusSchedule schedule);
 
+        /// <summary>
+        /// Set platform tags for repository
+        /// </summary>
         void SetPlatformTags(Dictionary<int, int> platformTags);
 
         /// <summary>

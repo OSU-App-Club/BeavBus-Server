@@ -11,6 +11,7 @@ namespace CorvallisBus.Core.Models.Connexionz
     /// </summary>
     public class ConnexionzRoute
     {
+        /// <summary></summary>
         public ConnexionzRoute(RoutePatternProjectRoute routePatternProjectRoute)
         {
             RouteNo = routePatternProjectRoute.RouteNo;
@@ -52,6 +53,7 @@ namespace CorvallisBus.Core.Models.Connexionz
                 .ToList();
         }
 
+        /// <summary></summary>
         public ConnexionzRoute(
             string routeNo,
             List<ConnexionzRoutePlatform> path,
@@ -64,6 +66,7 @@ namespace CorvallisBus.Core.Models.Connexionz
             IsActive = isActive;
         }
 
+        /// <summary></summary>
         public static IEnumerable<LatLong> GetPoints(string mif)
         {
             var matches = Regex.Matches(mif, @"-?\d+\.\d+");

@@ -11,22 +11,48 @@ namespace CorvallisBus.Core.Models
     [Flags]
     public enum DaysOfWeek
     {
+        /// <summary></summary>
         Sunday = 1,
+
+        /// <summary></summary>
         Monday = 2,
+
+        /// <summary></summary>
         Tuesday = 4,
+
+        /// <summary></summary>
         Wednesday = 8,
+
+        /// <summary></summary>
         Thursday = 16,
+
+        /// <summary></summary>
         Friday = 32,
+
+        /// <summary></summary>
         Saturday = 64,
 
+        /// <summary></summary>
         None = 0,
+
+        /// <summary></summary>
         All = Weekdays | Weekend,
+
+        /// <summary></summary>
         Weekdays = Monday | Tuesday | Wednesday | Thursday | Friday,
+
+        /// <summary></summary>
         Weekend = Sunday | Saturday
     }
 
+    /// <summary>
+    /// Utility functions for working with weekdays
+    /// </summary>
     public static class DaysOfWeekUtils
     {
+        /// <summary>
+        /// Convert a string to a weekday representation
+        /// </summary>
         public static DaysOfWeek ToDaysOfWeek(string day)
         {
             switch (day)
@@ -46,7 +72,7 @@ namespace CorvallisBus.Core.Models
         /// There is a real reason to have this enum instead of just DayOfWeek--
         /// it's useful to be able to OR days together the way we do.
         /// </summary>
-        /// <param name="days"></param>
+        /// <param name="day"></param>
         /// <returns></returns>
         public static DaysOfWeek ToDaysOfWeek(DayOfWeek day)
         {
