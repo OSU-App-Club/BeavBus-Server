@@ -21,9 +21,15 @@ using SendGrid.Helpers.Mail;
 
 namespace CorvallisBus.Controllers
 {
+    /// <summary>
+    /// Controller for generic routes.
+    /// </summary>
     [Route("")]
-    internal class RootController : Controller
+    public class RootController : Controller
     {
+        /// <summary>
+        /// Redirect to app dev club homepage.
+        /// </summary>
         [HttpGet]
         public ActionResult Index()
         {
@@ -45,7 +51,8 @@ namespace CorvallisBus.Controllers
         private readonly Func<DateTimeOffset> _getCurrentTime;
         private readonly BeaverBusManager _osuManager = new BeaverBusManager(new HttpClient());
 
-        internal TransitApiController()
+        /// <inheritdoc/>
+        public TransitApiController()
         {
             _getCurrentTime = () => TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.Now, _destinationTimeZoneId);
         }
