@@ -33,5 +33,23 @@ namespace CorvallisBus.Core
                 .Select(r => BusRoute.Create(r))
                 .ToList();
         }
+
+        /// <inheritdoc/>
+        public async Task<List<BusStop>?> GetStops(ITransitRepository repository, string routeId)
+        {
+            List<BeaverBusRoute>? routes = await client.GetRoutes();
+
+            // FIXME: Save stops to repository
+            if (routes is null) return null;
+
+            return routes
+                .Where(r => r.RouteId() == routeId)
+                .GroupBy(r => r.RouteId())
+                .Select(r => r.First())
+                .First()
+                .Stops
+                .Select(s => BusStop.Create(s))
+                .ToList();
+        }
     }
 }

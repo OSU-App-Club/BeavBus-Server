@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using CorvallisBus.Core.Models.BeaverBus;
 using CorvallisBus.Core.Models.Connexionz;
 
 using Newtonsoft.Json;
@@ -89,6 +90,17 @@ namespace CorvallisBus.Core.Models
                 Lat: platform.Lat,
                 Long: platform.Long,
                 RouteNames: routeNames);
+        }
+
+        internal static BusStop Create(BeaverBusStop stop)
+        {
+            return new BusStop(
+                Id: stop.IntegerId(),
+                Name: stop.Name,
+                Bearing: 0.0,
+                Lat: stop.Latitude,
+                Long: stop.Longitude,
+                RouteNames: new List<string>());
         }
     }
 }

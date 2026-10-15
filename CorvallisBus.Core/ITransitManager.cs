@@ -22,5 +22,12 @@ namespace CorvallisBus.Core
         /// <returns>A list of currently active routes</returns>
         /// <param name="repository">A Transit Repository used to store data</param>
         Task<List<BusRoute>?> GetRoutes(ITransitRepository repository);
+
+        /// <summary>
+        /// Fetch stops for a listed route
+        /// </summary>
+        /// <param name="repository">A Transit Repository used to store data</param>
+        /// <param name="routeId">A Route ID</param>
+        Task<List<BusStop>?> GetStops(ITransitRepository repository, string routeId);
     }
 }

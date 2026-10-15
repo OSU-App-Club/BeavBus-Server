@@ -74,7 +74,9 @@ namespace CorvallisBus.Core.Models
             return new BusRoute(
                 beaverBusRoute.RouteId(), // Id
                 beaverBusRoute.Route,     // Route
-                new List<int>(),          // Stops
+                beaverBusRoute.Stops
+                    .Select(s => s.IntegerId())
+                    .ToList(),            // Stops
                 beaverBusRoute.Color,     // Color
                 "https://transportation.oregonstate.edu/beaver-bus-schedules",  // URL
                 beaverBusRoute.Polyline   // Polyline
