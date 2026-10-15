@@ -78,5 +78,53 @@ namespace CorvallisBus.Test
             Assert.Equal(Color, route.Color);
             Assert.Contains(UrlPrefix, route.Url);
         }
+
+        private BeaverBusManager createManager()
+        {
+            HttpResponseMessage? res = new HttpResponseMessage
+            {
+                Content = new StreamContent(LoadRoutes())
+            };
+            TransitManagerMessageHandler? mockHttp = new TransitManagerMessageHandler(res);
+            return new BeaverBusManager(new HttpClient(mockHttp));
+        }
+
+        [Fact]
+        public async Task Stops()
+        {
+            var mockRepo = new Mock<ITransitRepository>();
+            BeaverBusManager underTest = createManager();
+
+            List<BusRoute>? routes = await underTest.GetRoutes(mockRepo.Object);
+            Assert.NotNull(routes);
+            BusRoute route = routes[0];
+            underTest = createManager();
+            List<BusStop>? stops = await underTest.GetStops(mockRepo.Object, route.Id);
+
+            Assert.NotNull(stops);
+            Assert.Equal(2, stops.Count);
+        }
+
+        [Theory]
+        [InlineData(0, "Reser Stadium", 44.55830904474858, -123.2816779368284)]
+        [InlineData(1, "Hilton Garden Inn", 44.55853439636686, -123.27841487006172)]
+        public async Task Stops_Data(int Index, string Name, double Lat, double Long)
+        {
+            var mockRepo = new Mock<ITransitRepository>();
+            BeaverBusManager underTest = createManager();
+
+            List<BusRoute>? routes = await underTest.GetRoutes(mockRepo.Object);
+            Assert.NotNull(routes);
+            BusRoute route = routes[0];
+            underTest = createManager();
+            List<BusStop>? stops = await underTest.GetStops(mockRepo.Object, route.Id);
+            Assert.NotNull(stops);
+
+            BusStop stop = stops[Index];
+            
+            Assert.Equal(Name, stop.Name);
+            Assert.Equal(Lat, stop.Lat);
+            Assert.Equal(Long, stop.Long);
+        }
     };
 }

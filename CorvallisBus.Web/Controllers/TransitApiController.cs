@@ -130,6 +130,58 @@ namespace CorvallisBus.Controllers
         }
 
         /// <summary>
+        /// Gets static stop data for a transit system.
+        /// </summary>
+        /// <remarks>
+        /// Gets static stop data for a transit system. This contains all useful metadata about what stops exist for a route
+        /// 
+        /// This data should be considered accurate for 24 hours. Caching it on the client side is encouraged.
+        /// </remarks>
+        /// <param name="system">The transit system to fetch routes for.</param>
+        /// <param name="routeId">The route to fetch stops for.</param>
+        /// <param name="_repository"></param>
+        /// <response code="200">The transit system stop data.</response>
+        /// <response code="400">An invalid transit system was specified.</response>
+        [HttpGet("stops")]
+        [Produces("application/json")]
+        [ProducesResponseType<List<BusStop>>(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        [Tags(["CTS", "OSU"])]
+        public async Task<ActionResult> GetStops([FromQuery] List<TransitSystem> system, string routeId, ITransitRepository _repository)
+        {
+            var stops = new List<BusStop>();
+
+            if (!system.Any()) system = [TransitSystem.OSU, TransitSystem.CTS];
+
+            foreach (TransitSystem sys in system)
+            {
+                ITransitManager mgr = GetManager(sys);
+                try
+                {
+                    var sysStops = await mgr.GetStops(_repository, routeId);
+                    if (sysStops is not null)
+                        stops.AddRange(sysStops);
+                }
+                catch
+                {
+                    return StatusCode(500);
+                }
+            }
+            ;
+
+            try
+            {
+                var json = JsonConvert.SerializeObject(stops.GroupBy(r => r.Id).Select(r => r.FirstOrDefault()).ToList());
+                return Content(json, "application/json");
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
+
+        /// <summary>
         /// Gets static CTS system data (routes and stops).
         /// </summary>
         /// <remarks>
