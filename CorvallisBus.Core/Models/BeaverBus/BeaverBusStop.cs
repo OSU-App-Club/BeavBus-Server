@@ -52,5 +52,10 @@ namespace CorvallisBus.Core.Models.BeaverBus
         [property: JsonProperty("plannedDeparture")]
         int? Departure)
     {
+        // Some APIs require an `int` for Id. Convert the long Id to an integer for use in those APIs
+        internal int IntegerId()
+        {
+            return unchecked((int)Id % 10000);
+        }
     }
 }

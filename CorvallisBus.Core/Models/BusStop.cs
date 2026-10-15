@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using CorvallisBus.Core.Models.BeaverBus;
 using CorvallisBus.Core.Models.Connexionz;
 
 using Newtonsoft.Json;
@@ -15,10 +16,6 @@ namespace CorvallisBus.Core.Models
     /// </param>
     /// <param name="Name">
     /// The name of the stop, for example: &quot;NW Monroe Ave &amp; NW 7th St&quot;.
-    /// </param>
-    /// <param name="Bearing">
-    /// The angle in degrees between this bus stop and the road. This can be treated as
-    /// the angle between the positive X axis and the direction of travel for buses at this stop.
     /// </param>
     /// <param name="Lat">
     /// The latitude value for the stop (between -90 and 90 degrees).
@@ -35,9 +32,6 @@ namespace CorvallisBus.Core.Models
 
         [property: JsonProperty("name")]
         string Name,
-
-        [property: JsonProperty("bearing")]
-        double Bearing,
 
         [property: JsonProperty("lat")]
         double Lat,
@@ -79,16 +73,23 @@ namespace CorvallisBus.Core.Models
         {
             return new BusStop(
                 Id: platform.PlatformNo,
-
                 Name: platform.CompactName +
                     (appendDirection
                         ? " " + ToDirection(platform.BearingToRoad)
                         : string.Empty),
-
-                Bearing: platform.BearingToRoad,
                 Lat: platform.Lat,
                 Long: platform.Long,
                 RouteNames: routeNames);
+        }
+
+        internal static BusStop Create(BeaverBusStop stop, BeaverBusRoute route)
+        {
+            return new BusStop(
+                Id: stop.IntegerId(),
+                Name: stop.Name,
+                Lat: stop.Latitude,
+                Long: stop.Longitude,
+                RouteNames: new List<String>() { route.Route });
         }
     }
 }
