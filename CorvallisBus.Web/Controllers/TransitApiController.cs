@@ -77,6 +77,30 @@ namespace CorvallisBus.Controllers
             }
         }
 
+        private async Task<List<T>> ConcatSystems<T>(List<TransitSystem> system, Func<ITransitManager, Task<List<T>?>> function)
+        {
+            if (!system.Any()) system = [TransitSystem.OSU, TransitSystem.CTS];
+
+            List<T> sysResults = new List<T>();
+
+            foreach (TransitSystem sys in system)
+            {
+                ITransitManager mgr = GetManager(sys);
+                try
+                {
+                    var sysValue = await function(mgr);
+                    if (sysValue is not null)
+                        sysResults.AddRange(sysValue);
+                }
+                catch
+                {
+                    throw new InvalidOperationException("Internal Server Error when concatenating system results");
+                }
+            }
+
+            return sysResults;
+        }
+
         /// <summary>
         /// Gets static route data for a transit system.
         /// </summary>
@@ -98,29 +122,70 @@ namespace CorvallisBus.Controllers
         [Tags(["CTS", "OSU"])]
         public async Task<ActionResult> GetRoutes([FromQuery] List<TransitSystem> system, ITransitRepository _repository)
         {
-            var routes = new List<BusRoute>();
+            List<BusRoute> routes;
 
-            if (!system.Any()) system = [TransitSystem.OSU, TransitSystem.CTS];
-
-            foreach (TransitSystem sys in system)
+            try
             {
-                ITransitManager mgr = GetManager(sys);
-                try
+                routes = await ConcatSystems<BusRoute>(system, (ITransitManager mgr) =>
                 {
-                    var sysRoutes = await mgr.GetRoutes(_repository);
-                    if (sysRoutes is not null)
-                        routes.AddRange(sysRoutes);
-                }
-                catch
-                {
-                    return StatusCode(500);
-                }
+                    return mgr.GetRoutes(_repository);
+                });
             }
-            ;
+            catch
+            {
+                return StatusCode(500);
+            }
 
             try
             {
                 var json = JsonConvert.SerializeObject(routes.GroupBy(r => r.Id).Select(r => r.FirstOrDefault()).ToList());
+                return Content(json, "application/json");
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
+
+        /// <summary>
+        /// Gets static stop data for a transit system.
+        /// </summary>
+        /// <remarks>
+        /// Gets static stop data for a transit system. This contains all useful metadata about what stops exist for a route
+        /// 
+        /// This data should be considered accurate for 24 hours. Caching it on the client side is encouraged.
+        /// </remarks>
+        /// <param name="system">The transit system to fetch routes for.</param>
+        /// <param name="routeId">The route to fetch stops for.</param>
+        /// <param name="_repository"></param>
+        /// <response code="200">The transit system stop data.</response>
+        /// <response code="400">An invalid transit system was specified.</response>
+        [HttpGet("stops")]
+        [Produces("application/json")]
+        [ProducesResponseType<List<BusStop>>(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        [Tags(["CTS", "OSU"])]
+        public async Task<ActionResult> GetStops([FromQuery] List<TransitSystem> system, string routeId, ITransitRepository _repository)
+        {
+            var stops = new List<BusStop>();
+            // FIXME: stops.RouteNames needs to be joined for all ID stops
+
+            try
+            {
+                stops = await ConcatSystems<BusStop>(system, (ITransitManager mgr) =>
+                {
+                    return mgr.GetStops(_repository, routeId);
+                });
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+
+            try
+            {
+                var json = JsonConvert.SerializeObject(stops.GroupBy(r => r.Id).Select(r => r.FirstOrDefault()).ToList());
                 return Content(json, "application/json");
             }
             catch

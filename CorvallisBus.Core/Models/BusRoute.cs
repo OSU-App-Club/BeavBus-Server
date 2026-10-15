@@ -30,6 +30,9 @@ namespace CorvallisBus.Core.Models
     /// <param name="Polyline">
     /// Google Maps-compatible polyline for this route.
     /// </param>
+    /// <param name="System">
+    /// Transit System providing this route.
+    /// </param>
     public record BusRoute(
         [property: JsonProperty("id")]
         string Id,
@@ -47,7 +50,10 @@ namespace CorvallisBus.Core.Models
         string Url,
 
         [property: JsonProperty("polyline")]
-        string Polyline)
+        string Polyline,
+
+        [property: JsonProperty("system")]
+        TransitSystem System)
     {
         internal static BusRoute Create(ConnexionzRoute connectionzRoute, Dictionary<string, GtfsRoute> googleRoutes)
         {
@@ -66,7 +72,7 @@ namespace CorvallisBus.Core.Models
             };
             var url = "https://www.corvallisoregon.gov/cts/page/cts-route-" + routeUrlSuffix;
 
-            return new BusRoute(routeNo, routeNo, path, googleRoute.Color, url, connectionzRoute.Polyline);
+            return new BusRoute(routeNo, routeNo, path, googleRoute.Color, url, connectionzRoute.Polyline, TransitSystem.CTS);
         }
 
         internal static BusRoute Create(BeaverBusRoute beaverBusRoute)
@@ -74,10 +80,13 @@ namespace CorvallisBus.Core.Models
             return new BusRoute(
                 beaverBusRoute.RouteId(), // Id
                 beaverBusRoute.Route,     // Route
-                new List<int>(),          // Stops
+                beaverBusRoute.Stops
+                    .Select(s => s.IntegerId())
+                    .ToList(),            // Stops
                 beaverBusRoute.Color,     // Color
                 "https://transportation.oregonstate.edu/beaver-bus-schedules",  // URL
-                beaverBusRoute.Polyline   // Polyline
+                beaverBusRoute.Polyline,  // Polyline
+                TransitSystem.OSU
             );
         }
     }

@@ -48,11 +48,11 @@ namespace CorvallisBus.Test
                     new BusStaticData(
                         Routes: new Dictionary<string, BusRoute>
                         {
-                            ["TEST"] = new BusRoute("TEST", "TEST", new List<int> { 12345 }, "", "", "")
+                            ["TEST"] = new BusRoute("TEST", "TEST", new List<int> { 12345 }, "", "", "", TransitSystem.CTS)
                         },
                         Stops: new Dictionary<int, BusStop>
                         {
-                            [12345] = new BusStop(0, "", 0, 0, 0, RouteNames: new List<string> { "TEST" })
+                            [12345] = new BusStop(0, "", 0, 0, RouteNames: new List<string> { "TEST" })
                         }
                     )));
             mockRepo.Setup(repo => repo.GetScheduleAsync()).Returns(Task.FromResult(testSchedule));
@@ -136,12 +136,12 @@ namespace CorvallisBus.Test
                     new BusStaticData(
                         Routes: new Dictionary<string, BusRoute>
                         {
-                            ["TEST1"] = new BusRoute("TEST1", "TEST1", new List<int> { 12345 }, Color: "", Url: "", Polyline: ""),
-                            ["TEST2"] = new BusRoute("TEST2", "TEST2", new List<int> { 12345 }, Color: "", Url: "", Polyline: "")
+                            ["TEST1"] = new BusRoute("TEST1", "TEST1", new List<int> { 12345 }, Color: "", Url: "", Polyline: "", System: TransitSystem.CTS),
+                            ["TEST2"] = new BusRoute("TEST2", "TEST2", new List<int> { 12345 }, Color: "", Url: "", Polyline: "", System: TransitSystem.CTS)
                         },
                         Stops: new Dictionary<int, BusStop>
                         {
-                            [12345] = new BusStop(0, "", 0, 0, 0, RouteNames: new List<string> { "TEST1", "TEST2" })
+                            [12345] = new BusStop(0, "", 0, 0, RouteNames: new List<string> { "TEST1", "TEST2" })
                         }
                     )));
 
@@ -225,11 +225,11 @@ namespace CorvallisBus.Test
                     new BusStaticData(
                         Routes: new Dictionary<string, BusRoute>
                         {
-                            ["TEST"] = new BusRoute("TEST", "TEST", new List<int> { 12345 }, Color: "", Url: "", Polyline: "")
+                            ["TEST"] = new BusRoute("TEST", "TEST", new List<int> { 12345 }, Color: "", Url: "", Polyline: "", System: TransitSystem.CTS)
                         },
                         Stops: new Dictionary<int, BusStop>
                         {
-                            [12345] = new BusStop(0, "", 0, 0, 0, RouteNames: new List<string> { "TEST" })
+                            [12345] = new BusStop(0, "", 0, 0, RouteNames: new List<string> { "TEST" })
                         }
                     )));
             mockRepo.Setup(repo => repo.GetScheduleAsync()).Returns(Task.FromResult(testSchedule));
