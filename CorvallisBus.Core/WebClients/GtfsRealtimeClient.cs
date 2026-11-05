@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
+using CorvallisBus.Core.DataAccess;
 using CorvallisBus.Core.GtfsRealtimeGenerated;
 using CorvallisBus.Core.Models;
 
@@ -85,14 +86,16 @@ namespace CorvallisBus.Core.WebClients
             return (alertsList, alerts?.Item2 ?? (ulong)DateTimeOffset.UnixEpoch.ToUnixTimeSeconds());
         }
 
-        public async Task<List<BusPosition>?> GetVehiclePositions(DateTimeOffset? lastSavedTimestamp)
+        public async Task<List<BusPosition>?> GetVehiclePositions(DateTimeOffset? lastSavedTimestamp, ITransitRepository repository)
         {
             Entity positions = await GetEntityAsync("vehicleposition", lastSavedTimestamp ?? DateTimeOffset.UnixEpoch);
 
             if (positions is null) return null;
 
+            BusStaticData sd = await repository.GetStaticDataAsync();
+
             List<BusPosition>? positionsList = positions?.Item1
-            .Select(BusPosition.Create)
+            .Select(s => BusPosition.Create(s, sd))
             .Where(pa => pa is not null)
             .Select(pa => pa!)
             .ToList();

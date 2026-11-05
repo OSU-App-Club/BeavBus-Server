@@ -216,7 +216,7 @@ namespace CorvallisBus
 
             if (positions is null)
             {
-                positions = await client.GetVehiclePositions(null);
+                positions = await client.GetVehiclePositions(null, repository);
             }
 
             return positions ?? new List<BusPosition> { };

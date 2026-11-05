@@ -88,7 +88,7 @@ namespace CorvallisBus.Core
                 (long)(busPositions?.Select(p => p.Timestamp).DefaultIfEmpty().Max() ?? 0)
             );
 
-            var positions = await _client.GetVehiclePositions(pos_timestamp);
+            var positions = await _client.GetVehiclePositions(pos_timestamp, _repository);
             _repository.SetBusPositions(positions);
         }
     }

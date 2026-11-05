@@ -1,0 +1,4 @@
+route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id
+"ND",1,1,"Downtown Transit Center",0,260,45
+"1",1,640,"Downtown Transit Center",0,260,44
+"3",1,277,"Downtown Transit Center",0,260,45
