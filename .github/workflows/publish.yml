@@ -17,7 +17,7 @@ jobs:
         with:
           global-json-file: global.json
 
-      - name: Resource and publish
+      - name: Restore and publish
         run: |
           dotnet restore
           dotnet build --configuration Release
