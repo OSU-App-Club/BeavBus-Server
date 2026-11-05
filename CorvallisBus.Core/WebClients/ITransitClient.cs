@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using CorvallisBus.Core.DataAccess;
 using CorvallisBus.Core.Models;
 using CorvallisBus.Core.Models.Connexionz;
 
@@ -33,10 +34,11 @@ namespace CorvallisBus.Core.WebClients
         /// Fetch the latest vehicle posisitons
         /// </summary>
         /// <param name="lastSavedTimestamp">Last saved timestamp, or NULL to fetch all data</param>
+        /// <param name="repository">A transit repository, used for fetching static data regarding a vehicle</param>
         /// <returns>
         /// A List of GTFS-specific vehicle positions.
         /// It is likely this data will need to be reformatted in a TransitManager
         /// </returns>
-        Task<List<BusPosition>?> GetVehiclePositions(DateTimeOffset? lastSavedTimestamp);
+        Task<List<BusPosition>?> GetVehiclePositions(DateTimeOffset? lastSavedTimestamp, ITransitRepository repository);
     }
 }

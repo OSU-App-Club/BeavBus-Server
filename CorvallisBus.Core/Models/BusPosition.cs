@@ -1,3 +1,6 @@
+using System.Linq;
+
+using CorvallisBus.Core.DataAccess;
 using CorvallisBus.Core.GtfsRealtimeGenerated;
 
 using Newtonsoft.Json;
@@ -14,6 +17,7 @@ namespace CorvallisBus.Core.Models
     /// <param name="Latitude">Latitude of the bus</param>
     /// <param name="Longitude">Longitude of the bus</param>
     /// <param name="Speed">Current bus speed (for estimations and live updating)</param>
+    /// <param name="RouteId">The route this bus is currently on</param>
     public record BusPosition(
         [property: JsonProperty("id")]
         string Id,
@@ -31,15 +35,14 @@ namespace CorvallisBus.Core.Models
         float Longitude,
 
         [property: JsonProperty("speed")]
-        float Speed
+        float Speed,
+
+        [property: JsonProperty("routeId")]
+        string RouteId
     )
     {
-        /// <summary>
-        /// Create a Bus Position from a raw GTFS Bus Position record
-        /// </summary>
-        /// <param name="gtfsBusPosition">a GTFS Bus Position record</param>
-        /// <returns>a newly created BusPosition</returns>
-        public static BusPosition Create(FeedEntity gtfsBusPosition)
+        // For testing deserialization
+        internal static BusPosition Create(FeedEntity gtfsBusPosition)
         {
             return new BusPosition(
                 gtfsBusPosition.Vehicle.Vehicle.Id,
@@ -47,7 +50,24 @@ namespace CorvallisBus.Core.Models
                 gtfsBusPosition.Vehicle.Timestamp,
                 gtfsBusPosition.Vehicle.Position.Latitude,
                 gtfsBusPosition.Vehicle.Position.Longitude,
-                gtfsBusPosition.Vehicle.Position.Speed
+                gtfsBusPosition.Vehicle.Position.Speed,
+                ""
+            );
+        }
+
+        internal static BusPosition Create(FeedEntity gtfsBusPosition, BusStaticData staticData)
+        {
+            string tripId = gtfsBusPosition.Vehicle.Trip.TripId;
+            string routeId = staticData.Trips.Where(t => t.Id.ToString() == tripId).First().RouteId;
+
+            return new BusPosition(
+                gtfsBusPosition.Vehicle.Vehicle.Id,
+                gtfsBusPosition.Vehicle.Vehicle.Label,
+                gtfsBusPosition.Vehicle.Timestamp,
+                gtfsBusPosition.Vehicle.Position.Latitude,
+                gtfsBusPosition.Vehicle.Position.Longitude,
+                gtfsBusPosition.Vehicle.Position.Speed,
+                routeId
             );
         }
     }

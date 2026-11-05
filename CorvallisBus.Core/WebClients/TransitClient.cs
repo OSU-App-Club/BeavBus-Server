@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
+using CorvallisBus.Core.DataAccess;
 using CorvallisBus.Core.Models;
 using CorvallisBus.Core.Models.Connexionz;
 using CorvallisBus.Core.Models.Gtfs;
@@ -32,7 +33,8 @@ namespace CorvallisBus.Core.WebClients
 
             var staticData = new BusStaticData(
                 Routes: routes.ToDictionary(r => r.Route),
-                Stops: stops.ToDictionary(s => s.Id)
+                Stops: stops.ToDictionary(s => s.Id),
+                Trips: googleData.Trips.Select(s => BusFrequency.Create(s)).ToList()
             );
 
             var platformTagsLookup = connexionzPlatforms.ToDictionary(p => p.PlatformNo, p => p.PlatformTag);
@@ -232,6 +234,6 @@ namespace CorvallisBus.Core.WebClients
         public async Task<(List<ServiceAlert>, ulong)?> GetServiceAlerts(DateTimeOffset? lastSavedTimestamp) => await gtfsRealtimeClient.GetServiceAlerts(lastSavedTimestamp);
 
         /// <inheritdoc/>
-        public async Task<List<BusPosition>?> GetVehiclePositions(DateTimeOffset? lastSavedTimestamp) => await gtfsRealtimeClient.GetVehiclePositions(lastSavedTimestamp);
+        public async Task<List<BusPosition>?> GetVehiclePositions(DateTimeOffset? lastSavedTimestamp, ITransitRepository repository) => await gtfsRealtimeClient.GetVehiclePositions(lastSavedTimestamp, repository);
     }
 }

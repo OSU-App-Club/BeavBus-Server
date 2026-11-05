@@ -16,5 +16,8 @@ namespace CorvallisBus.Core.Models
         Dictionary<string, BusRoute> Routes,
 
         [property: JsonProperty("stops")]
-        Dictionary<int, BusStop> Stops);
+        Dictionary<int, BusStop> Stops,
+
+        [property: JsonProperty("trips")]
+        List<BusFrequency> Trips);
 }

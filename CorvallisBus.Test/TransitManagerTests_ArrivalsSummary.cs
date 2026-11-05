@@ -53,7 +53,8 @@ namespace CorvallisBus.Test
                         Stops: new Dictionary<int, BusStop>
                         {
                             [12345] = new BusStop(0, "", 0, 0, RouteNames: new List<string> { "TEST" })
-                        }
+                        },
+                        Trips: new List<BusFrequency>()
                     )));
             mockRepo.Setup(repo => repo.GetScheduleAsync()).Returns(Task.FromResult(testSchedule));
             mockRepo.Setup(repo => repo.GetPlatformTagsAsync()).Returns(Task.FromResult(new Dictionary<int, int> { { 12345, 123 } }));
@@ -142,7 +143,8 @@ namespace CorvallisBus.Test
                         Stops: new Dictionary<int, BusStop>
                         {
                             [12345] = new BusStop(0, "", 0, 0, RouteNames: new List<string> { "TEST1", "TEST2" })
-                        }
+                        },
+                        Trips: new List<BusFrequency>()
                     )));
 
             mockRepo.Setup(repo => repo.GetScheduleAsync()).Returns(Task.FromResult(testSchedule));
@@ -230,7 +232,8 @@ namespace CorvallisBus.Test
                         Stops: new Dictionary<int, BusStop>
                         {
                             [12345] = new BusStop(0, "", 0, 0, RouteNames: new List<string> { "TEST" })
-                        }
+                        },
+                        Trips: new List<BusFrequency>()
                     )));
             mockRepo.Setup(repo => repo.GetScheduleAsync()).Returns(Task.FromResult(testSchedule));
             mockRepo.Setup(repo => repo.GetPlatformTagsAsync()).Returns(Task.FromResult(new Dictionary<int, int> { { 12345, 123 } }));

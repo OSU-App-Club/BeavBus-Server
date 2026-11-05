@@ -57,7 +57,7 @@ namespace CorvallisBus.Test
             BusPosition vehicle = BusPosition.Create(position);
 
             string json = JsonConvert.SerializeObject(vehicle);
-            Assert.Equal("{\"id\":\"1\",\"label\":\"749\",\"timestamp\":1779327322,\"latitude\":44.564766,\"longitude\":-123.263306,\"speed\":0.0}", json);
+            Assert.Equal("{\"id\":\"1\",\"label\":\"749\",\"timestamp\":1779327322,\"latitude\":44.564766,\"longitude\":-123.263306,\"speed\":0.0,\"routeId\":\"\"}", json);
         }
     }
 }
