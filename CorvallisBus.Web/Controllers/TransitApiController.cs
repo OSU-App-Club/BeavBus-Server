@@ -16,9 +16,6 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 using Newtonsoft.Json;
 
-using SendGrid;
-using SendGrid.Helpers.Mail;
-
 namespace CorvallisBus.Controllers
 {
     /// <summary>
@@ -369,92 +366,6 @@ namespace CorvallisBus.Controllers
             var alerts = await TransitManager.GetServiceAlerts(_repository, _client);
             var alertsJson = JsonConvert.SerializeObject(alerts);
             return Content(alertsJson, "application/json");
-        }
-
-        /// <summary>
-        /// Performs a first-time setup and import of static data.
-        /// </summary>
-        /// <param name="_repository"></param>
-        /// <param name="_client"></param>
-        [HttpPost("job/init")]
-        [ApiExplorerSettings(IgnoreApi = true)] // Private API
-        public ActionResult Init(ITransitRepository _repository, ITransitClient _client)
-        {
-            var expectedAuth = Environment.GetEnvironmentVariable("CorvallisBusAuthorization");
-            if (!string.IsNullOrEmpty(expectedAuth))
-            {
-                var authValue = Request.Headers["Authorization"];
-                if (expectedAuth != authValue)
-                {
-                    return Unauthorized();
-                }
-            }
-
-            try
-            {
-                var errors = DataLoadJob(_repository, _client);
-                if (errors.Count != 0)
-                {
-                    var message = GetValidationErrorMessage(_repository, _client, errors);
-                    SendNotification("corvallisb.us init job had validation errors", message).Wait();
-                    return Ok(message);
-                }
-
-                return Ok("Init job successful.");
-            }
-            catch (Exception ex)
-            {
-                SendExceptionNotification(_repository, _client, ex).Wait();
-                throw;
-            }
-        }
-
-        private Task SendExceptionNotification(ITransitRepository _repository, ITransitClient _client, Exception ex)
-        {
-            var lastWriteTime = System.IO.File.GetLastWriteTime(_repository.StaticDataPath);
-            var htmlContent =
-$@"<h2>Init job failed: {ex.Message}</h2>
-<pre>{ex.StackTrace}</pre>
-
-<p>Init files last updated on {lastWriteTime}</p>";
-            return SendNotification(subject: "corvallisb.us init task threw an exception", htmlContent);
-        }
-
-        private string GetValidationErrorMessage(ITransitRepository _repository, ITransitClient _client, List<string> errors)
-        {
-            var lastWriteTime = System.IO.File.GetLastWriteTime(_repository.StaticDataPath);
-            return $@"<h2>Init job had {errors.Count} validation errors</h2>
-<pre>{string.Join('\n', errors)}</pre>
-
-<p>Init files last updated on {lastWriteTime}</p>";
-        }
-
-
-        private async Task SendNotification(string subject, string htmlContent)
-        {
-            var apiKey = Environment.GetEnvironmentVariable("CorvallisBusSendGridKey");
-            if (string.IsNullOrEmpty(apiKey))
-            {
-                return;
-            }
-
-            var client = new SendGridClient(apiKey);
-            var from = new EmailAddress("azure_78fe1edda7f051b6116e50e4617e08f1@azure.com", "corvallisb.us Notification");
-            var to = new EmailAddress("rikkigibson@gmail.com", "Rikki Gibson");
-
-            var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent: subject, htmlContent);
-            _ = await client.SendEmailAsync(msg);
-        }
-
-        private List<string> DataLoadJob(ITransitRepository _repository, ITransitClient _client)
-        {
-            var (busSystemData, errors) = _client.LoadTransitData();
-
-            _repository.SetStaticData(busSystemData.StaticData);
-            _repository.SetPlatformTags(busSystemData.PlatformIdToPlatformTag);
-            _repository.SetSchedule(busSystemData.Schedule);
-
-            return errors;
         }
     }
 }
