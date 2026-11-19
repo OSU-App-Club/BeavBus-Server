@@ -23,6 +23,7 @@ namespace CorvallisBus.Core
     public class Worker(ILogger<Worker> logger, ITransitRepository repository, ITransitClient client) : BackgroundService
     {
         private int _workerIntervalSeconds = 15;
+        private int _workerIntervalDays = 7;
 
         /// <summary>
         /// Number of seconds to schedule the timer for
@@ -39,6 +40,21 @@ namespace CorvallisBus.Core
             }
         }
 
+        /// <summary>
+        /// Number of days to schedule the timer for
+        /// </summary>
+        public int WORKER_INTERVAL_DAYS
+        {
+            get
+            {
+                return _workerIntervalDays;
+            }
+            set
+            {
+                _workerIntervalDays = value;
+            }
+        }
+
         private readonly ILogger<Worker> _logger = logger;
         private readonly ITransitRepository _repository = repository;
         private readonly ITransitClient _client = client;
@@ -48,15 +64,20 @@ namespace CorvallisBus.Core
         {
             _logger.LogInformation("BeavBus Server Worker Service Running");
 
-            await PerformWork();
+            await PerformWeeklyWork();
 
             using PeriodicTimer timer = new(TimeSpan.FromSeconds(WORKER_INTERVAL_SECONDS));
+            using PeriodicTimer weeklyTimer = new(TimeSpan.FromDays(WORKER_INTERVAL_DAYS));
 
             try
             {
                 while (await timer.WaitForNextTickAsync(stoppingToken))
                 {
                     await PerformWork();
+                }
+                while (await weeklyTimer.WaitForNextTickAsync(stoppingToken))
+                {
+                    await PerformWeeklyWork();
                 }
             }
             catch (OperationCanceledException)
@@ -90,6 +111,30 @@ namespace CorvallisBus.Core
 
             var positions = await _client.GetVehiclePositions(pos_timestamp, _repository);
             _repository.SetBusPositions(positions);
+        }
+
+        private async Task PerformWeeklyWork()
+        {
+            _logger.LogInformation("Worker executing tasks at: {time}", DateTimeOffset.Now);
+
+            // Data Initialisation
+            try
+            {
+                var (busSystemData, errors) = _client.LoadTransitData();
+
+                _repository.SetStaticData(busSystemData.StaticData);
+                _repository.SetPlatformTags(busSystemData.PlatformIdToPlatformTag);
+                _repository.SetSchedule(busSystemData.Schedule);
+
+                if (errors.Count != 0)
+                {
+                    _logger.LogWarning("Data Fetch Job had validation errors");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Data fetch job failed: {ex.Message}, {ex.StackTrace}");
+            }
         }
     }
 }
